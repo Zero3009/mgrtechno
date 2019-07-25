@@ -25,6 +25,7 @@ Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
 Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
 Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
 Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProds']);
+Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
 //FIN AJAX
 
 

@@ -180,25 +180,6 @@
 			<div slot="modal-footer"></div>
   		</b-modal>
 	</div>
-	<!--<div>
-        <div class="form-inline">
-                <input type="text" class="form-control mb-2 mr-sm-2" v-model="searchText" placeholder="Search..." @keyup="search">        
-        </div>-->    
-        <!--<vuetable ref="vuetable"
-            api-url="/datatables/getstock"
-            :css="css.table"
-            :fields="columns"
-            pagination-path=""
-            :per_page="1"
-            :append-params="moreParams"
-            @vuetable:pagination-data="onPaginationData"
-        >
-        </vuetable>-->
-        <!--<vuetable-pagination ref="pagination"
-            @vuetable-pagination:change-page="onChangePage"
-            :css="css.pagination">
-        </vuetable-pagination>-->
-    </div>
 </template>
 <script>
 	

@@ -13,6 +13,12 @@ import popper from 'popper.js';
 import Vue from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
+
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+
+Vue.use(Vuetify)
+
 //import Datepicker from 'vuejs-datepicker';
 import axios from 'axios';
 //import vuetable from 'vuetable-2';
@@ -70,6 +76,24 @@ Vue.component('filter-bar', FilterBar);
     }
   }
 });*/
+/*const store = new Vuex.Store({
+  state: {
+    options: [],
+    serials: [],
+    proveedores: []
+  },
+  mutations: {
+    setOptions (state, optionss) {
+      state.options = optionss;
+    },
+    setSerials (state, serialss) {
+      state.serials = serialss;
+    },
+    setProvs (state, provss) {
+      state.proveedores = provss;
+    }
+  }
+});*/
 
 const app = new Vue({
     el: '#app'/*,
@@ -87,7 +111,7 @@ const app = new Vue({
       {
         return store.state.proveedores;
       }
-    }*//*,
+    },
     methods:
     {
     	setGlobalOptions(ops)

@@ -80,4 +80,11 @@ class AjaxController extends Controller
 
 		return Response::json($ajax);
 	}
+	public function checkCodbarras(Request $request)
+	{
+		$ajax = Productos::select('prods.codbarras as check')
+				->where('prods.codbarras','=',$request->codbarras)
+				->get();
+		return Response::json($ajax);
+	}
 }

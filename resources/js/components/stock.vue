@@ -258,10 +258,6 @@
                 return Vue.delete(this.rowsdynamic, index);
             }
         },
-        watch:
-        {
-
-        },
         beforeMount()
         {
             this.cargarSelects();

@@ -57,7 +57,6 @@
             <div slot="modal-footer"></div>
         </b-modal>
         {{tipos}}
-        {{data}}
 	</div>
 </template>
 <script>
@@ -101,6 +100,14 @@
 		},
 		methods:
 		{
+			getMarcas: function()
+			{
+				return this.marcas;
+			},
+			getTipos: function()
+			{
+				return this.tipos;
+			},
 			ShowModal: function()
 			{
 				this.cargarSelects();
@@ -135,11 +142,14 @@
             	//this.$refs.vuetab.$chilren.$refs.vuetable.refresh()
             	axios.post('/admin/productos/nuevo',
             		this.data).then(response => {
-            			console.log(response.data)
-            			this.$refs.vuetab.$refs.vuetable.refresh()
             			this.$refs.modal.hide();
+            			this.$refs.vuetab.$refs.table.refresh();
             		});
             }
+		},
+		beforeMount()
+		{
+			this.cargarSelects()
 		}
 	}
 </script>
