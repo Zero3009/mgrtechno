@@ -18,15 +18,30 @@ class DatatablesController extends Controller
 	public function GetProveedores(Request $request)
 	{
 		$retornar = Proveedores::select(['provs.id', 'provs.nombre', 'provs.tel'])
-						->where('estado','=', true);
-		return Vuetable::of($retornar)->make();
+						->where('estado','=', true)
+						->get();
+		return Response::json($retornar);
 	}
-	public function GetProductos()
+	public function GetProductos(Request $request)
 	{
-		//return $request;
+		$parameters = $request->ctx;
 		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.codbarras'])
 						->where('estado','=', true);
-		return Vuetable::of($retornar)->make();
+		if($parameters['filter'] != null)
+		{
+			$filtro = $parameters['filter'];
+			$retornar = $retornar->where(function ($retornar) use ($filtro) {
+								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
+								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
+								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
+								if(is_numeric($filtro))
+								{
+									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+								}
+						});
+		}
+
+		return Response::json($retornar->paginate($parameters['perPage']));
 	}
 	public function getStock()
 	{

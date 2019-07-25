@@ -32,7 +32,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/admin/stock', 'StockController@IndexStock');
 //DATATABLES
 Route::get('/datatables/getproveedores', ['uses' => 'DatatablesController@GetProveedores']);
-Route::get('/datatables/getproductos', ['uses' => 'DatatablesController@GetProductos']);
+Route::post('/datatables/getproductos', ['uses' => 'DatatablesController@GetProductos']);
 Route::get('/datatables/getstock', ['uses' => 'DatatablesController@GetStock']);
 Route::get('/datatables/getproveedoreseliminados', ['uses' => 'DatatablesController@GetProveedoresEliminados']);
 Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController@GetProductosEliminados']);
