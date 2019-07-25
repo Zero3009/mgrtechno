@@ -24,12 +24,13 @@ class DatatablesController extends Controller
 	}
 	public function GetProductos(Request $request)
 	{
-		$parameters = $request->ctx;
+		$parameters = $request->all();
+		//return $parameters['search'];
 		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.codbarras'])
 						->where('estado','=', true);
-		if($parameters['filter'] != null)
+		if($parameters['search'] != null)
 		{
-			$filtro = $parameters['filter'];
+			$filtro = $parameters['search'];
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
 								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
 								$retornar->orWhere('prods.marca','ilike',"%$filtro%");

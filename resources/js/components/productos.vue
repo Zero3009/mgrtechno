@@ -1,18 +1,21 @@
 <template>
-	<div>
+	<div>{{pagination}}
 		<v-data-table
     		:headers="headers"
-		    :items="desserts"
-		    :page.sync="totalrows"
-		    :items-per-page="5"
-		    sort-by="calories"
+		    :items="items"
+		    :items-per-page="pagination"
+		    :options.sync="options"
+		    :loading="loading"
 		    class="elevation-1"
+		    :server-items-length="totalrows"
+		    @update:pagination="updatePagination"
 		    :footer-props="{
-		      showFirstLastPage: true,
-		      firstIcon: 'mdi-arrow-collapse-left',
-		      lastIcon: 'mdi-arrow-collapse-right',
-		      prevIcon: 'mdi-minus',
-		      nextIcon: 'mdi-plus'
+		   		itemsPerPageOptions: paginations,
+		      	showFirstLastPage: true,
+		      	firstIcon: 'mdi-arrow-collapse-left',
+		      	lastIcon: 'mdi-arrow-collapse-right',
+		      	prevIcon: 'mdi-minus',
+		      	nextIcon: 'mdi-plus'
 		    }"
   		>
     <template v-slot:top>
@@ -154,26 +157,28 @@
 <script>
   export default {
     data: () => ({
-      dialog: false,
-      totalrows: 0,
-      page: 1,
-      search: "",
-    pageCount: 0,
-    itemsPerPage: 10,
-      headers: [
-        {
-          text: 'Dessert (100g serving)',
-          align: 'left',
-          sortable: false,
-          value: 'name',
-        },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
-        { text: 'Actions', value: 'action', sortable: false },
-      ],
-      desserts: [],
+    	paginations:[1,5,15,25],
+    	items: [],
+    	loading: true,
+      	dialog: false,
+      	options: {},
+      	totalrows: 1,
+      	page: 1,
+      	pagination: 1,
+      	search: "",
+    	pageCount: 0,
+      	headers: [
+	        {
+	          text: 'Código de barras',
+	          align: 'left',
+	          sortable: true,
+	          value: 'codbarras',
+	        },
+	        { text: 'Tipo de producto', value: 'tipo' },
+	        { text: 'Modelo', value: 'modelo' },
+	        { text: 'Marca', value: 'marca' },
+	        { text: 'Actions', value: 'action', sortable: false },
+      	],
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -194,21 +199,29 @@
     computed: {
       formTitle () {
         return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },
-      ctx()
-      {
-      	return {
-      		totalrows: this.totalrows,
-      		pagination: this.pagination
-
-      	}
       }
     },
 
     watch: {
-      dialog (val) {
-        val || this.close()
-      },
+      	dialog (val) {
+        	val || this.close()
+      	},
+      	pagination: function() {
+      		this.getPage()
+      	},
+      	search: function () {
+      		this.getDataFromApi()
+      	},
+		options: {
+	        handler () {
+	          this.getDataFromApi()
+	            .then(data => {
+	              	this.desserts = data.items
+	              	this.totalDesserts = data.total
+	            })
+	        },
+	        deep: true,
+      	},
     },
 
     created () {
@@ -216,6 +229,77 @@
     },
 
     methods: {
+    	/*getDataFromApi: function()
+    	{
+    		this.loading = true;
+    		let promise = axios.post('/datatables/getproductos',{
+		        	search: this.search,
+		        	pagination: this.pagination
+		        })
+
+		        return promise.then((data) => {
+		        	this.loading = false;
+		          const items = data.data.data
+		          this.items = items
+		        }).catch(error => {
+		          return []
+		        })
+    	},*/
+    	getDataFromApi () {
+        this.loading = true
+        return new Promise((resolve, reject) => {
+        	console.log(resolve)
+        	console.log(reject)
+          const { sortBy, descending, page, itemsPerPage } = this.options
+
+          let items = axios.post('/datatables/getproductos',{
+		        	search: this.search,
+		        	pagination: this.pagination
+		        })
+          const total = items.length
+
+          /*if (this.options.sortBy) {
+            items = items.sort((a, b) => {
+              const sortA = a[sortBy]
+              const sortB = b[sortBy]
+
+              if (descending) {
+                if (sortA < sortB) return 1
+                if (sortA > sortB) return -1
+                return 0
+              } else {
+                if (sortA < sortB) return -1
+                if (sortA > sortB) return 1
+                return 0
+              }
+            })
+          }
+
+          if (itemsPerPage > 0) {
+            items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+          }
+
+          setTimeout(() => {
+            this.loading = false
+            resolve({
+              items,
+              total,
+            })
+          }, 1000)*/
+        })
+      },
+    	updatePagination(pagination)
+    	{
+    		console.log(pagination)
+    	},
+    	getSearch()
+    	{
+    		console.log(this.search)
+    	},
+    	getPage()
+    	{
+    		console.log(this.pagination)
+    	},
       initialize () {
         this.desserts = [
           {
