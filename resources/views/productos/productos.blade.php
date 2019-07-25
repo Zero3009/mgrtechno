@@ -1,8 +1,7 @@
 @extends('layouts.admin')
-@section('main-content')
-
-                <productos style="width: 100%"></productos>
-
+@section('content')
+    <productos style="width: 100%"></productos>
+asdasdfasdfsadfas
 @stop
 @section('js')
 @push('scripts')

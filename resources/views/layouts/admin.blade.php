@@ -13,56 +13,117 @@
     <title>MGR Techno</title>
 </head>
 <body class="bg-light">
+<div id="app">
+    <v-app id="inspire">
+        <v-navigation-drawer
+            v-model="drawer"
+            app
+            clipped
+        >
+            <v-list dense>
+                <v-list-group
+                    prepend-icon="account_circle"
+                    value="true"
+                >
+                    <template v-slot:activator>
+                        <v-list-item-title>Users</v-list-item-title>
+                    </template>
 
-<nav class="navbar navbar-expand navbar-dark bg-primary">
-    <a class="sidebar-toggle mr-3" href="#"><i class="fa fa-bars"></i></a>
-    <a class="navbar-brand" href="#">MGR Techno</a>
+                    <v-list-group no-action sub-group value="true">
+                        <template v-slot:activator>
+                            <v-list-item-content>
+                                <v-list-item-title>Admin</v-list-item-title>
+                            </v-list-item-content>
+                        </template>
 
-    <div class="navbar-collapse collapse">
-        <ul class="navbar-nav ml-auto">
-            <!--<li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-envelope"></i> 5</a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-bell"></i> 3</a></li>
-            <li class="nav-item dropdown">
-                <a href="#" id="dd_user" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Doe</a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd_user">
-                    <a href="#" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item">Logout</a>
-                </div>
-            </li>-->
-        </ul>
-    </div>
-</nav>
+                        <v-list-item
+                            v-for="(admin, i) in admins"
+                            :key="i"
+                            link
+                        >
+                            <v-list-item-title v-text="admin[0]"></v-list-item-title>
+                            <v-list-item-icon>
+                                <v-icon v-text="admin[1]"></v-icon>
+                            </v-list-item-icon>
+                        </v-list-item>
+                    </v-list-group>
+                </v-list-group>
+                <v-list-group prepend-icon="all_inbox"
+                    value="true">
+                    <template v-slot:activator>
+                        <v-list-item-title>Stock</v-list-item-title>
+                    </template>
+                    <v-list-item v-for="(stocks, i) in stock" :key="i" link>
+                        <v-list-item-title v-text="stocks[0]"></v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon v-text="stocks[1]"></v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
 
-<div class="d-flex">
-    <div class="sidebar sidebar-dark bg-dark">
-        <ul class="list-unstyled">
-            <li><a href="/admin/inicio"><i class="fas fa-chart-line"></i> Menu Item</a></li>
-            <li>
-                <a href="#sm_expand_1" data-toggle="collapse">
-                    <i class="fas fa-archive"></i> Gestionar stock
-                </a>
-                <ul id="sm_expand_1" class="list-unstyled collapse">
-                    <li><a href="/admin/stock">Alta</a></li>
-                    <li><a href="#">Submenu Item</a></li>
-                </ul>
-            </li>
-            <li><a href="/admin/productos"><i class="fas fa-hdd"></i> Gestionar productos</a></li>
-            <li><a href="/admin/proveedores"><i class="fas fa-users"></i> Gestionar proveedores</a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i> Menu Item</a></li>
-        </ul>
-    </div>
+                </v-list-group>
+            </v-list>
+    </v-navigation-drawer>
 
-    <div class="content p-4">
+    <v-app-bar
+      app
+      clipped-left
+    >
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title>MGR Techno</v-toolbar-title>
+    </v-app-bar>
 
-        <div class="card mb-4" id="app">
-            @yield('main-content')
-        </div>
-    </div>
+    <v-content>
+        <v-container
+            fluid
+            fill-height
+        >
+            <v-layout
+                align-center
+                justify-center
+            >
+                @yield('content')
+                <!--<v-flex shrink>
+                    <v-tooltip right>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          href=""
+                          icon
+                          large
+                          target="_blank"
+                          v-on="on"
+                        >
+                          <v-icon large>mdi-code-tags</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Source</span>
+                    </v-tooltip>
+                    <v-tooltip right>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                icon
+                                large
+                                href="https://codepen.io/johnjleider/pen/bXNzZL"
+                                target="_blank"
+                                v-on="on"
+                            >
+                                <v-icon large>mdi-codepen</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Codepen</span>
+                    </v-tooltip>
+                </v-flex>-->
+            </v-layout>
+        </v-container>
+    </v-content>
+
+    <v-footer app>
+        <span>&copy; 2019</span>
+    </v-footer>
+  </v-app>
+
 </div>
-
-<script src="{{mix('js/app.js')}}"></script>
-<script src="/js/bootadmin.js"></script>
-
 </body>
+<script type="text/javascript" src="{{mix('js/app.js')}} "></script>
 </html>
+
 

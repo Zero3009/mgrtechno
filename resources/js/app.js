@@ -31,11 +31,14 @@ import FilterBar from './components/FilterBar';
 //import VueEvents from 'vue-events'
 import CustomActionsProductos from './components/tables/actions/CustomActionsProductos'
 import CustomActionsStock from './components/tables/actions/CustomActionsStock'
+import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 //import VueToastr from '@deveodk/vue-toastr'
 //import '@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css'
 
 Vue.component('custom-actions-productos', CustomActionsProductos)
 Vue.component('custom-actions-stock', CustomActionsStock)
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -46,16 +49,17 @@ Vue.use(BootstrapVue);
 Vue.component('moment', moment);
 Vue.component('v-select', vSelect);
 Vue.component('axios', axios);
+Vue.component('app', require('./components/app.vue').default);
 //Vue.component('vuetable', vuetable);
 //Vue.component('vuetable-pagination', VuetablePagination);
 //Vue.component('vuejs-datepicker', Datepicker);
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+/*Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('stock', require('./components/stock.vue').default);
 Vue.component('stocktable', require('./components/tables/stocktable.vue').default);
-Vue.component('productos', require('./components/productos.vue').default);
-Vue.component('productosnuevo', require('./components/productosnuevo.vue'));
+*/Vue.component('productos', require('./components/productos.vue').default);
+/*Vue.component('productosnuevo', require('./components/productosnuevo.vue'));
 Vue.component('proveedores', require('./components/proveedores').default);
-Vue.component('filter-bar', FilterBar);
+Vue.component('filter-bar', FilterBar);*/
 //Vue.use(VueToastr)
 
 /*const store = new Vuex.Store({
@@ -96,7 +100,27 @@ Vue.component('filter-bar', FilterBar);
 });*/
 
 const app = new Vue({
-    el: '#app'/*,
+    el: '#app',
+    vuetify: new Vuetify({
+      theme: { dark: true },
+    }),
+      data: () => ({
+      drawer: null,
+      admins: [
+        ['Management', 'people_outline'],
+        ['Settings', 'settings'],
+      ],
+      stock: [
+        ['Alta','add'],
+        ['Recuperar', 'restore_from_trash']
+      ],
+      cruds: [
+        ['Create', 'add'],
+        ['Read', 'insert_drive_file'],
+        ['Update', 'update'],
+        ['Delete', 'delete'],
+      ],
+    })/*,
     computed: 
     {
     	optionsGlobals()
@@ -129,3 +153,4 @@ const app = new Vue({
 	  
     }*/
 });
+
