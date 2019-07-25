@@ -20,6 +20,7 @@ class Clientes extends Migration
             $table->string('correo')->unique()->nullable();
             $table->integer('documento')->unique()->nullable();
             $table->string('domicilio')->nullable();
+            $table->timestamps();
         });
     }
 

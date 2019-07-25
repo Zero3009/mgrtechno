@@ -10,7 +10,6 @@ class Cliente extends Model
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
     protected $fillable = ['nombre', 'apellido','correo','documento','domicilio'];
-    public $timestamps = false;
 
     public function stock()
     {

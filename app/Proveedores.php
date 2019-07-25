@@ -10,7 +10,6 @@ class Proveedores extends Model
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
     protected $fillable = ['nombre', 'tel','estado'];
-    public $timestamps = false;
 
     public function setNombreAttribute($value)
 	{

@@ -21,10 +21,10 @@ class AjaxController extends Controller
 	}
 	public function getMarcas(Request $request)
 	{
-		$ajax = Productos::select('prods.marca as label')
+		$ajax = Productos::select('prods.marca as value')
 						->where('prods.estado','=',true)
-						->groupBy('label')
-						->get();
+						->groupBy('prods.marca')
+						->pluck('value');
 		
 		return Response::json($ajax);
 	}
@@ -74,9 +74,9 @@ class AjaxController extends Controller
 	}
 	public function getTiposProds()
 	{
-		$ajax = Productos::select('prods.tipo as label')
+		$ajax = Productos::select('prods.tipo as value')
 			->groupBy('prods.tipo')
-			->get();
+			->pluck('value');
 
 		return Response::json($ajax);
 	}

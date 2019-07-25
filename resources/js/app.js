@@ -45,9 +45,10 @@ Vue.component('axios', axios);
 //Vue.component('vuejs-datepicker', Datepicker);
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('stock', require('./components/stock.vue').default);
-Vue.component('productos', require('./components/productos.vue'));
+Vue.component('stocktable', require('./components/tables/stocktable.vue').default);
+Vue.component('productos', require('./components/productos.vue').default);
 Vue.component('productosnuevo', require('./components/productosnuevo.vue'));
-Vue.component('proveedores', require('./components/proveedores'));
+Vue.component('proveedores', require('./components/proveedores').default);
 Vue.component('filter-bar', FilterBar);
 //Vue.use(VueToastr)
 

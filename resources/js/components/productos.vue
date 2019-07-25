@@ -56,6 +56,8 @@
             </form>
             <div slot="modal-footer"></div>
         </b-modal>
+        {{tipos}}
+        {{data}}
 	</div>
 </template>
 <script>

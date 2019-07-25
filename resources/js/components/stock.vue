@@ -68,7 +68,7 @@
                                 <input type="number" class="form-control" v-model="n.precioEntrada" name="precioEntrada[]" id="precioEntrada_1">
                             </td>
                             <td style="width:15%">
-                                <b-form-input type="date" v-model="n.state" format="yyyy-MM-dd" name="fecha[]" placeholder="Fecha" ></b-form-input>
+                                <b-form-input type="date" v-model="n.state" format="dd-MM-yyyy" name="fecha[]" placeholder="Fecha" ></b-form-input>
                             </td>
                             <td style="width:10%">
                                 <input data-bot="add" class="btn btn-success" v-on:click="aument()" tabindex="1" type="button" name="add"  id="add_1" value="+">
@@ -85,7 +85,7 @@
                     </template>
                 </form>
             </div>
-            <!--<stocktable style="width: 100%"></stocktable>-->  
+            <stocktable style="width: 100%"></stocktable>  
         </div>
 
           
@@ -108,9 +108,7 @@
             }
             var datas=
             {
-                state: state.date,
-                /*en: en,
-                es: es,*/
+                state: this.today(),
                 selected: null,
                 tag: null,
                 selected2: null,
@@ -123,7 +121,7 @@
                         codbarras: null,
                         proveedor: null,
                         seriales: [],
-                        state: state.date,
+                        state: this.today(),
                         precioEntrada: 0
                     }
                 ],
@@ -185,6 +183,21 @@
             }
         },
         methods: {
+            today: function()
+            {
+                var date = new Date();
+                var month= date.getMonth() + 1;
+                if(month<10)
+                {
+                    month = "0" + month; 
+                }
+                var day = date.getDate();
+                if(day<10)
+                {
+                    day = "0" + day; 
+                }
+                return (date.getFullYear()+ '-' + month + '-' +  day) ;
+            },
             newItem: function()
             {
                 axios.post('/admin/stock/nuevo',

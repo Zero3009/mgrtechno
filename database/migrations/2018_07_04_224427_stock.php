@@ -27,11 +27,11 @@ class Stock extends Migration
             $table->date('fecha_salida')->nullable();
             $table->boolean('disponible')->default(true);
             
-            $table->integer('clientes_id')->unsigned();
+            $table->integer('clientes_id')->nullable()->unsigned();
             $table->foreign('clientes_id')->references('id')->on('clientes')->onDelete('restrict')->onUpdate('restrict');
 
             $table->boolean('estado')->default(true);
-
+            $table->timestamps();
             
         });
     }

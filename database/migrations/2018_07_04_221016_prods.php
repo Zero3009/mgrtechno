@@ -19,6 +19,7 @@ class Prods extends Migration
             $table->string('modelo');
             $table->string('codbarras', 80)->unique();
             $table->boolean('estado')->default(true);
+            $table->timestamps();
         });
     }
 

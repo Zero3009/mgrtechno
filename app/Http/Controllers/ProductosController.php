@@ -44,9 +44,9 @@ class ProductosController extends Controller
                             ->withInput();
             }
             $query = new Productos;
-                $query->tipo = $request->tipo['label'];
+                $query->tipo = $request->tipo;
                 $query->modelo = $request->modelo;
-                $query->marca = $request->marca['label'];
+                $query->marca = $request->marca;
                 $query->codbarras = $request->codbarras;
             $query->save();
             DB::commit();
