@@ -97,7 +97,7 @@
                           ref="menu"
                           v-model="menu"
                           :close-on-content-click="false"
-                          :return-value.sync="selectedItem.date"
+                          :return-value.sync="selectedItem.fecha_entrada"
                           transition="scale-transition"
                           offset-y
                           full-width
@@ -105,17 +105,17 @@
                         >
                           <template v-slot:activator="{ on }">
                             <v-text-field
-                              v-model="selectedItem.date"
+                              v-model="selectedItem.fecha_entrada"
                               label="Picker in menu"
                               prepend-icon="event"
                               readonly
                               v-on="on"
                             ></v-text-field>
                           </template>
-                          <v-date-picker v-model="selectedItem.date" no-title scrollable>
+                          <v-date-picker v-model="selectedItem.fecha_entrada" no-title scrollable>
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="$refs.menu.save(selectedItem.date)">OK</v-btn>
+                            <v-btn text color="primary" @click="$refs.menu.save(selectedItem.fecha_entrada)">OK</v-btn>
                           </v-date-picker>
                         </v-menu>
                         <!--<v-text-field v-model="selectedItem.marca" label="Marca"></v-text-field>-->
@@ -128,8 +128,8 @@
                           hide-selected
                           small-chips
                           multiple
-                          hint="Seleccione la marca, si no existe escribala"
-                          label="Proveedor"
+                          hint="Introduzca todos los seriales del mismo producto"
+                          label="Seriales"
                           persistent-hint
                         >
                           <template v-slot:no-data>
@@ -143,6 +143,9 @@
                           </template>
                         </v-combobox>
                         <!--<v-text-field v-model="selectedItem.modelo" label="Modelo"></v-text-field>-->
+                      </v-flex>
+                      <v-flex xs12 sm6 md4>
+                        <v-text-field v-model="selectedItem.precio_entrada" type="numeric" label="Precio de entrada"></v-text-field>  
                       </v-flex>
                       <!--<v-flex xs12 sm6 md4>
                         <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
@@ -211,10 +214,10 @@
       >
         delete
       </v-icon>
-    </template>
-    <!--<template v-slot:no-data>
+    </template><!--
+    <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>-->  
+    </template>-->
       </v-data-table>
     </v-card>
 </template>
@@ -234,10 +237,11 @@
             seriales: []
           },
           searching:{
-            codbarras: 0,
+            codbarras: "",
             tipo: "",
             marca: "",
-            proveedor: ""
+            proveedor: "",
+            seriales: ""
           }
         },
         dialog: false,
@@ -277,7 +281,8 @@
           marca: "",
           modelo: "",
           proveedor: "",
-          date: "",
+          fecha_entrada: "",
+          precio_entrada: 0,
           seriales: []
         },
         selectedItem: {
@@ -291,7 +296,8 @@
           marca: "",
           modelo: "",
           proveedor: "",
-          date: "",
+          fecha_entrada: "",
+          precio_entrada: 0,
           seriales: []
         }
       }
@@ -379,7 +385,7 @@
       save () {
         if(this.formTitle == "Nuevo producto")
         {
-          axios.post('/admin/productos/nuevo',
+          axios.post('/admin/stock/nuevo',
                 this.selectedItem).then(response => {
                   
                 });
@@ -444,7 +450,17 @@
       {
         axios.get('/ajax/seriales')
             .then(response => {
-              this.comboboxes.fields.proveedores = response.data;
+              var a = [];
+              console.log(response.data)
+              response.data.forEach(function(item){
+                            a.push({
+                              value: item.value,
+                              disabled: true,
+                              text: item.text
+                            });
+              }); 
+              this.comboboxes.fields.seriales = a;
+            
             });
       }
     

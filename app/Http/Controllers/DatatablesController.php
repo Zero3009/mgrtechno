@@ -60,7 +60,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
-		$retornar = Stock::select(['stock.id','prods.codbarras','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre'])
+		$retornar = Stock::select(['stock.id','prods.codbarras','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre'])
 							->join('prods','stock.prods_id','=','prods.id')
 							->join('provs','stock.provs_id','=','provs.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
@@ -72,6 +72,7 @@ class DatatablesController extends Controller
 								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
 								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
 								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
+								$retornar->orWhere('stock.serial','ilike',"%$filtro%");
 								if(is_numeric($filtro))
 								{
 									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");

@@ -17,7 +17,7 @@ class StockController extends Controller
     }
     public function NewStock(Request $request)
     {   
-        //return $request;
+        $parameters = $request->all();
     	DB::beginTransaction();
     	try 
         {
@@ -36,11 +36,8 @@ class StockController extends Controller
             } */  
             //return sizeof($request->all());
 
-                for ($i=0; $i < sizeof($request->all()); $i++) {
-                    //return 'entr';
-                    //$arraySeriales = explode(",", $request->seriales[$i]);
-                    for($h = 0;$h < sizeof($request[$i]['seriales']);$h++){   
-                    //return $request[0]['seriales'][0];                     
+                /*for ($i=0; $i < sizeof($request->all()); $i++) {
+                    for($h = 0;$h < sizeof($request[$i]['seriales']);$h++){              
                         $query = new Stock;
                             $query->prods_id = $request[$i]['codbarras']['value'];
                             $query->provs_id = $request[$i]['proveedor']['value'];
@@ -52,9 +49,17 @@ class StockController extends Controller
                         
                         $query->save();
                     }
-                    //return 'llego2';
-                }
-            
+                }*/
+            for($i=0;$i <sizeof($parameters['codbarras']);$i++)
+            {
+                $query= new Stock;
+                    $query->prods_id = $parameters['codbarras']['value'];
+                    $query->provs_id = $parameters['proveedor']['value'];
+                    $query->serial = $parameters['seriales'][$i];
+                    $query->precio_entrada = $parameters['precio_entrada'];
+                    $query->fecha_entrada = $parameters['fecha_entrada'];
+                $query->save();
+            }
             DB::commit();
             return response()->json([
                 'status' => 'success',

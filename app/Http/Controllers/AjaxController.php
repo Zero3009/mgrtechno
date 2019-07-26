@@ -43,11 +43,12 @@ class AjaxController extends Controller
 	}
 	public function getSeriales(Request $request)
 	{
-		$ajax = Stock::select('stock.serial as text')
-						->where('stock.estado','=',true);
+		$ajax = Stock::select('stock.serial as text','stock.serial as value')
+						->where('stock.estado','=',true)
+						->get();
 			
 
-		return Response::json($ajax->pluck('text'));
+		return Response::json($ajax);
 	}
 	public function LineEntrada()
 	{
