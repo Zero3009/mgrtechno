@@ -17,10 +17,22 @@ class DatatablesController extends Controller
 {
 	public function GetProveedores(Request $request)
 	{
+		$parameters = $request->all();
 		$retornar = Proveedores::select(['provs.id', 'provs.nombre', 'provs.tel'])
-						->where('estado','=', true)
-						->get();
-		return Response::json($retornar);
+						->where('estado','=', true);
+		if($parameters['search'] != null)
+		{
+			$filtro = $parameters['search'];
+			$retornar = $retornar->where(function ($retornar) use ($filtro) {
+								$retornar->orWhere('provs.tel','ilike',"%$filtro%");
+								$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+								/*if(is_numeric($filtro))
+								{
+									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+								}*/
+						});
+		}
+		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 	}
 	public function GetProductos(Request $request)
 	{
@@ -44,16 +56,32 @@ class DatatablesController extends Controller
 
 		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 	}
-	public function getStock()
+	public function getStock(Request $request)
 	{
+		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
 		$retornar = Stock::select(['stock.id','prods.codbarras','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre'])
 							->join('prods','stock.prods_id','=','prods.id')
 							->join('provs','stock.provs_id','=','provs.id')
+							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
 							->where('stock.estado','=',true);
+		if($parameters['search'] != null)
+		{
+			$filtro = $parameters['search'];
+			$retornar = $retornar->where(function ($retornar) use ($filtro) {
+								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
+								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
+								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
+								if(is_numeric($filtro))
+								{
+									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+								}
+						});
+		}
+
 		//					->orderBy("$ordenar[0]", "$ordenar[1]")
 		//					->paginate(15);
-		return Vuetable::of($retornar)->make();
+		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 		/*$datatables = app('datatables')
 						->of($retornar)->addColumn('action', function($retornar){
 							return '<a href="/admin/stock/editar/'.$retornar->id.'" class="btn btn-xs btn-primary details-control"><i class="glyphicon glyphicon-edit"></i></a><a href="#" class="btn btn-xs btn-danger delete" data-id="'.$retornar->id.'"><i class="glyphicon glyphicon-trash"></i></a><a href="#" class="btn btn-xs btn-success out" data-id="'.$retornar->id.'"><i class="glyphicon glyphicon-check"></i></a>';

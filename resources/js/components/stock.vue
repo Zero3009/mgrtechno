@@ -1,266 +1,454 @@
 <template>
-    
-    <div>
-        <div class="card-header" style="background: #222d32   ; color: #FFFFFF;  opacity: 0.9;">
-            <div class="row">
-                <div class="col-md-4" style="float: left;">
-                    <h3 class="panel-title" style="margin-top: 10px;">Gestionar stock</h3>
-                </div>
-            </div>
-        </div>
-        <div class="card-body" style="background: #D7D7D7">
-                
-                
-            <div class="border border-primary">
-                <form @submit.prevent="newItem" accept-charset="UTF-8" class="form-horizontal">
-                    <table class="table table-striped table-bordered" name="tabla" id="tabla">
-            
-                        <tr>
-                            <th scope="col" style="width:18%">Codigo de barras</th>
-                            <th scope="col" style="width:15%">Modelo</th>
-                            <th scope="col" style="width:20%">Serial</th>
-                            <th scope="col" style="width:10%">Proveedor</th>
-                            <th scope="col" style="width:12%">Precio Entrada</th>
-                            <th scope="col" style="width:15%">Fecha Entrada</th>
-                            <th scope="col" style="width:10%">Accion</th>
-                        </tr>
-                        <tr v-bind:id="'row_' + n.id" v-for="n in rowsdynamic">
-                
-                            <td style="width:18%">
-                                <v-select :options="options" v-model="n.codbarras" placeholder="Código de barras"></v-select>
-                                <!--<template v-if="n.codbarras != null">
-                                    <input type="hidden" name="codbarras[]" v-model="n.codbarras.value">
-                                </template>-->
-                            </td>
-                            <td style="width:15%">
-                                <template v-if="n.codbarras != null">
-                                    <label class="form-control">{{n.codbarras.modelo}}</label>
-                                </template>
-                            </td>
-                            <td style="width:20%">
-                                <v-select   v-model="n.seriales" 
-                                            :options="seriales" 
-                                            taggable 
-                                            multiple 
-                                            placeholder="Seriales">
-                                </v-select>
-                                <template v-if="n.seriales.length == 0">
-                                        <small id="emailHelp" class="form-text text-danger">Complete serial para continuar</small>
-                                </template>
-                                <template v-else-if="verificarSeriales[n.id -1].status == true">
-                                        <small id="emailHelp" class="form-text text-primary">Correcto</small>
-                                </template>
-                                <template v-else>
-                                        <small id="emailHelp" class="form-text text-danger">Serial ya existe: {{verificarSeriales[n.id -1].errores.toString()}} </small>    
-                                </template>
-                                <!--<template v-if="n.seriales != null">
-                                    <input type="hidden" name="seriales[]" v-model="n.seriales">
-                                </template>-->
-                            </td>
-                            <td style="width:10%">
+    <v-card>
+      <!--<v-card-title>
+        Stock
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>-->
+      <v-data-table
+        :search="search"
+        :headers="headers"
+        :items="desserts"
+        :options.sync="options"
+        :server-items-length="totalDesserts"
+        :loading="loading"
+        class="elevation-1"
+      >
+        <template v-slot:top>
+          <v-toolbar flat>
+          <v-toolbar-title>Productos</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
+              </template>
+              <v-card  v-if="formCalc == false">
+                <v-card-title>
+                  <span class="headline">{{ formTitle + ': ' + selectedItem.codbarras.modelo}}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container grid-list-md>
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 md4>
+                        <!--<v-text-field v-model="selectedItem.codbarras" label="Código de barras"></v-text-field>-->
+                        <v-combobox
+                          v-model="selectedItem.codbarras"
+                          :items="comboboxes.fields.codbarras"
+                          :search-input.sync="comboboxes.searching.codbarras"
+                          hide-selected
+                          hint="Seleccione la marca, si no existe escribala"
+                          label="Código de barras"
+                          persistent-hint
+                        >
+                          <template v-slot:no-data>
+                            <v-list-item>
+                              <v-list-item-content>
+                                <v-list-item-title>
+                                  No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
+                                </v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                          </template>
+                        </v-combobox>
+                      </v-flex>
+                      <v-flex xs12 sm6 md4>
+                        <!--<v-text-field v-model="selectedItem.tipo" label="Tipo de producto"></v-text-field>-->
+                        <v-combobox
+                          v-model="selectedItem.proveedor"
+                          :items="comboboxes.fields.proveedores"
+                          :search-input.sync="comboboxes.searching.proveedor"
+                          hide-selected
+                          hint="Seleccione la marca, si no existe escribala"
+                          label="Proveedor"
+                          persistent-hint
+                        >
+                          <template v-slot:no-data>
+                            <v-list-item>
+                              <v-list-item-content>
+                                <v-list-item-title>
+                                  No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
+                                </v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                          </template>
+                        </v-combobox>
+                      </v-flex>
+                      <v-flex xs12 sm6 md4>
+                        <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          :return-value.sync="selectedItem.date"
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="selectedItem.date"
+                              label="Picker in menu"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker v-model="selectedItem.date" no-title scrollable>
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="$refs.menu.save(selectedItem.date)">OK</v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                        <!--<v-text-field v-model="selectedItem.marca" label="Marca"></v-text-field>-->
+                      </v-flex>
+                      <v-flex xs12 sm6 md4>
+                        <v-combobox
+                          v-model="selectedItem.seriales"
+                          :items="comboboxes.fields.seriales"
+                          :search-input.sync="comboboxes.searching.seriales"
+                          hide-selected
+                          small-chips
+                          multiple
+                          hint="Seleccione la marca, si no existe escribala"
+                          label="Proveedor"
+                          persistent-hint
+                        >
+                          <template v-slot:no-data>
+                            <v-list-item>
+                              <v-list-item-content>
+                                <v-list-item-title>
+                                  No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
+                                </v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                          </template>
+                        </v-combobox>
+                        <!--<v-text-field v-model="selectedItem.modelo" label="Modelo"></v-text-field>-->
+                      </v-flex>
+                      <!--<v-flex xs12 sm6 md4>
+                        <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                      </v-flex>-->
+                    </v-layout>
+                  </v-container>
+                </v-card-text>
 
-                                <v-select :options="proveedores" v-model="n.proveedor" placeholder="Proveedor"></v-select>
-                                <!--<template v-if="n.proveedor != null">
-                                    <input type="hidden" name="proveedor[]" v-model="n.proveedor.value">
-                                </template>-->
-                            </td>
-                            <td style="width:12%">
-                                <input type="number" class="form-control" v-model="n.precioEntrada" name="precioEntrada[]" id="precioEntrada_1">
-                            </td>
-                            <td style="width:15%">
-                                <b-form-input type="date" v-model="n.state" format="dd-MM-yyyy" name="fecha[]" placeholder="Fecha" ></b-form-input>
-                            </td>
-                            <td style="width:10%">
-                                <input data-bot="add" class="btn btn-success" v-on:click="aument()" tabindex="1" type="button" name="add"  id="add_1" value="+">
-                                <button  type="button" name="remove" v-on:click="decrease($event)" v-bind:id="n.id" v-show="n.id > 1" class="btn btn-danger">X</button>
-                            </td>
-                        </tr>
-            
-                    </table>
-                    <template v-if="ready == true">
-                        <input class="btn btn btn-success" tabindex="1" type="submit" value="Cargar" style="margin-bottom: 10px; margin-left: 10px">
-                    </template>
-                    <template v-else>
-                        <input class="btn btn btn-success" tabindex="1" disabled type="submit" value="Cargar" style="margin-bottom: 10px; margin-left: 10px">
-                    </template>
-                </form>
-            </div>
-            <stocktable style="width: 100%"></stocktable>  
-        </div>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+              <v-card v-else>
+                <v-card-title>
+                  <span class="headline">¿Seguro que quiere eliminar el producto?</span>
+                </v-card-title>
+                <v-card-text>
 
-          
-
-        <div class="panel-footer">
-
-        </div>
-    </div>
+                  <v-simple-table
+                    :dense="dense"
+                    :fixed-header="fixedHeader"
+                    :height="height"
+                  >
+                    <tbody>
+                      <tr>
+                        <td>Marca:</td>
+                        <td>{{ selectedItem.marca }}</td>
+                      </tr>
+                      <tr>
+                        <td>Modelo:</td>
+                        <td>{{ selectedItem.modelo }}</td>
+                      </tr>
+                      <tr>
+                        <td>Tipo de producto:</td>
+                        <td>{{ selectedItem.tipo }}</td>
+                      </tr>
+                      <tr>
+                        <td>Código de barras:</td>
+                        <td>{{ selectedItem.codbarras }}</td>
+                      </tr>
+                    </tbody>
+                  </v-simple-table>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+    <template v-slot:item.action="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        edit
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        delete
+      </v-icon>
+    </template>
+    <!--<template v-slot:no-data>
+      <v-btn color="primary" @click="initialize">Reset</v-btn>
+    </template>-->  
+      </v-data-table>
+    </v-card>
 </template>
 <script>
-    //import stocktable from './tables/stocktable';
-    //import {en, es} from 'vuejs-datepicker/dist/locale';
-    export default {
-        //el: "#app",
-        data: function()
-        {   
-
-            var state = {
-                date: new Date()
-            }
-            var datas=
-            {
-                state: this.today(),
-                selected: null,
-                tag: null,
-                selected2: null,
-                options: [],
-                proveedores: [],
-                seriales: [],
-                rowsdynamic: [
-                    {
-                        id: 1,
-                        codbarras: null,
-                        proveedor: null,
-                        seriales: [],
-                        state: this.today(),
-                        precioEntrada: 0
-                    }
-                ],
-                url: '/ajax/productos',
-                url2: '/ajax/codbarras',
-                url3: '/ajax/proveedores',
-                url4: '/ajax/seriales',
-            }
-            return datas;
-        },
-        /*components:
+  export default {
+    data () {
+      return {
+        formTitle: "",
+        menu: false,
+        comboboxes:
         {
-            stocktable
-        },*/
-        computed: {
-            ready: function()
-            {
-                var flag = true
-                for(var i = 0;i<this.rowsdynamic.length;i++)
-                {
-                    if(this.rowsdynamic[i].codbarras != null && this.rowsdynamic[i].proveedor != null && this.rowsdynamic[i].seriales.length != 0 && this.rowsdynamic[i].precioEntrada > 0 && this.verificarSeriales[i].status == true)
-                    {
-                        flag = true
-                    }
-                    else
-                    {
-                        return false
-                    }
-                }
-                return true
-            },
-            data: function(){
-                return this.rowsdynamic
-            },
-            verificarSeriales: function()
-            {
-                var testing = []
-                for(var i = 0;i < this.rowsdynamic.length;i++)
-                {
-                    testing.push({id: i, errores: [], status: true})
-                    for(var j = 0;j < this.rowsdynamic[i].seriales.length;j++)
-                    {
-                        for(var k = 0;k < this.seriales.length; k++){
-
-                            if(this.rowsdynamic[i].seriales[j] == this.seriales[k])
-                            {
-                                testing[i].status = false
-                                testing[i].errores.push(this.rowsdynamic[i].seriales[j])
-                                break;
-                            }
-                            else if(testing[i].status != false)
-                            {
-                                testing[i].status = true
-                            }
-                        }
-                    }
-                }
-                return testing;
-            }
+          fields:{
+            codbarras: [],
+            tipos: [],
+            marcas: [],
+            proveedores: [],
+            seriales: []
+          },
+          searching:{
+            codbarras: 0,
+            tipo: "",
+            marca: "",
+            proveedor: ""
+          }
         },
-        methods: {
-            today: function()
-            {
-                var date = new Date();
-                var month= date.getMonth() + 1;
-                if(month<10)
-                {
-                    month = "0" + month; 
-                }
-                var day = date.getDate();
-                if(day<10)
-                {
-                    day = "0" + day; 
-                }
-                return (date.getFullYear()+ '-' + month + '-' +  day) ;
-            },
-            newItem: function()
-            {
-                axios.post('/admin/stock/nuevo',
-                    this.data).then(response => {
-                        //this.$toastr('add', response.data)
-                        for(var i = this.rowsdynamic.length - 1; i >= 0; i--){
-                           Vue.delete(this.rowsdynamic, i)
-                        }
-                        this.rowsdynamic.push({id: 1, codbarras: null, proveedor: null, seriales: [], state: this.state, precioEntrada: 0});
-
-                    }).catch(error => {
-                        //this.$toastr('add', error.response.data);
-                    });
-            },
-            cargarSelects()
-            {
-                this.codbarras();
-                this.provees();
-                this.serials();
-            },
-            codbarras()
-            {
-                axios.get(this.url2)
-                    .then(response => {
-                        this.options = response.data;
-                        //this.$parent.$options.methods.setGlobalOptions(response.data);
-                });
-            },
-            serials()
-            {
-                axios.get(this.url4)
-                    .then(response => {
-                        var a = [];
-                        response.data.forEach(function(item){
-                            a.push(item.label);
-                        });   
-                        this.seriales = a;
-                        //this.$parent.$options.methods.setGlobalSerials(a);
-                })
-            },
-            provees()
-            {
-                axios.get(this.url3)
-                    .then(response => {
-                        
-                        this.proveedores = response.data;
-                        //this.$parent.$options.methods.setGlobalProvs(response.data);
-
-                });
-            },
-            aument() 
-            {
-                return this.rowsdynamic.push({id: this.rowsdynamic[this.rowsdynamic.length - 1].id + 1, codbarras: null, proveedor: null, seriales: [], state: this.state, precioEntrada: 0});
-            },
-            decrease(event) 
-            {
-                var index = this.rowsdynamic.findIndex(x => x.id==event.currentTarget.id);
-                return Vue.delete(this.rowsdynamic, index);
-            }
+        dialog: false,
+        search:'',
+        totalDesserts: 0,
+        desserts: [],
+        loading: true,
+        options: {},
+        headers: [
+          { text: 'ID', value:'id'},
+          { text: 'Código de barras', value: 'codbarras' },
+          { text: 'Tipo de producto', value: 'tipo' },
+          { text: 'Modelo', value: 'modelo' },
+          { text: 'Marca', value: 'marca' },
+          { text: 'Serial', value: 'serial'},
+          { text: 'Fecha de entrada', value: 'fecha_entrada'},
+          { text: 'Precio de entrada', value: 'precio_entrada'},
+          { text: 'Actions', value: 'action', sortable: false }
+        ],
+        //EXPERIMENTAL
+        editedIndex: -1,
+        editedItem: {
+          name: '',
+          calories: 0,
+          fat: 0,
+          carbs: 0,
+          protein: 0,
         },
-        beforeMount()
-        {
-            this.cargarSelects();
+        defaultItem: {
+          id: 0,
+          codbarras: {
+            value: 0,
+            text: "",
+            modelo: ""
+          },
+          tipo: "",
+          marca: "",
+          modelo: "",
+          proveedor: "",
+          date: "",
+          seriales: []
+        },
+        selectedItem: {
+          id: 0,
+          codbarras: {
+            value: 0,
+            text: "",
+            modelo: ""
+          },
+          tipo: "",
+          marca: "",
+          modelo: "",
+          proveedor: "",
+          date: "",
+          seriales: []
         }
-    }
+      }
+    },
+    computed:
+    {
+      formCalc: function()
+      {
+        if(this.formTitle == 'Eliminar producto')
+        {
+          return true
+        }
+        else
+        {
+          return false
+        }
+
+      }
+    },
+    watch: {
+      search:{
+        handler () {
+          this.getDataFromApi()
+        },
+        deep: true,
+      },
+      options: {
+        handler () {
+          this.getDataFromApi()
+        },
+        deep: true,
+      },
+      dialog (val) {
+        val || this.close()
+      },
+    },
+    mounted () {
+      this.getDataFromApi()
+      this.cargarSelects()
+    },
+    methods: {
+      getDataFromApi () {
+        this.loading = true
+          const { sortBy, descending, page, itemsPerPage } = this.options
+          axios.post('/datatables/getstock',
+          {
+            search: this.search,
+            sortBy: this.options.sortBy,
+            descending: this.options.descending,
+            page: this.options.page,
+            itemsPerPage: this.options.itemsPerPage
+          }).then(response => {
+            this.desserts = response.data.data
+            this.totalDesserts = response.data.total
+            this.loading = false;
+          });
+      },
+      newItem ()
+      {
+        this.formTitle = "Nuevo producto"
+        this.selectedItem = Object.assign({}, this.defaultItem)
+        this.dialog = true  
+      },
+      editItem (item) {
+        this.formTitle = "Editar producto"
+        this.selectedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        this.formTitle = "Eliminar producto"
+        this.selectedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.selectedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+          this.getDataFromApi();
+        }, 300)
+      },
+
+      save () {
+        if(this.formTitle == "Nuevo producto")
+        {
+          axios.post('/admin/productos/nuevo',
+                this.selectedItem).then(response => {
+                  
+                });
+        }
+        else if(this.formTitle == "Editar producto")
+        {
+          axios.post('/admin/productos/editar',
+                this.selectedItem).then(response => {
+                  
+                });
+        }
+        else if(this.formTitle == "Eliminar producto")
+        {
+          axios.post('/admin/productos/eliminar',
+                {id:this.selectedItem.id}).then(response => {
+                    
+                });   
+        }
+        this.close()
+      },
+      //CARGAR COMBOBOX
+      cargarSelects: function()
+      {
+        this.getTiposProductos();
+        this.getMarcas();
+        this.getCodbarras();
+        this.getProveedores();
+        this.getSeriales();
+      },
+      getTiposProductos: function()
+      {
+          axios.get('/ajax/tiposprods')
+            .then(response => {
+              this.comboboxes.fields.tipos = response.data;
+          });
+      },
+      getMarcas: function()
+      {
+        axios.get('/ajax/marcas')
+          .then(response => {
+            this.comboboxes.fields.marcas = response.data;    
+        });
+      },
+      getCodbarras()
+      {
+        axios.get('/ajax/codbarras')
+            .then(response => {
+              this.comboboxes.fields.codbarras = response.data;
+        });
+      },
+      getProveedores()
+      {
+          axios.get('/ajax/proveedores')
+              .then(response => {
+                  
+                  this.comboboxes.fields.proveedores = response.data;
+                  //this.$parent.$options.methods.setGlobalProvs(response.data);
+
+          });
+      },
+      getSeriales()
+      {
+        axios.get('/ajax/seriales')
+            .then(response => {
+              this.comboboxes.fields.proveedores = response.data;
+            });
+      }
+    
+    },
+  }
+
 </script>

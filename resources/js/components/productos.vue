@@ -1,6 +1,6 @@
 <template>
     <v-card>
-      <v-card-title>
+      <!--<v-card-title>
         Stock
         <v-spacer></v-spacer>
         <v-text-field
@@ -10,7 +10,7 @@
           single-line
           hide-details
         ></v-text-field>
-      </v-card-title>
+      </v-card-title>-->
       <v-data-table
         :search="search"
         :headers="headers"
@@ -22,12 +22,20 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-          <v-toolbar-title>My CRUD</v-toolbar-title>
+          <v-toolbar-title>Productos</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
             vertical
           ></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
@@ -52,6 +60,7 @@
                           hide-selected
                           hint="Seleccione la marca, si no existe escribala"
                           label="Tipo de producto"
+                          small-chips
                           persistent-hint
                         >
                           <template v-slot:no-data>

@@ -53,13 +53,24 @@
                     <template v-slot:activator>
                         <v-list-item-title>Stock</v-list-item-title>
                     </template>
-                    <v-list-item v-for="(stocks, i) in stock" :key="i" link>
+                    <v-list-item v-for="(stocks, i) in stock" :key="i" link :href="stocks[2]">
                         <v-list-item-title v-text="stocks[0]"></v-list-item-title>
                         <v-list-item-icon>
                             <v-icon v-text="stocks[1]"></v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-
+                </v-list-group>
+                <v-list-group prepend-icon="settings"
+                    value="true">
+                    <template v-slot:activator>
+                        <v-list-item-title>Configuración</v-list-item-title>
+                    </template>
+                    <v-list-item v-for="(setting, i) in settings" :key="i" link :href="setting[2]">
+                        <v-list-item-title v-text="setting[0]"></v-list-item-title>
+                        <v-list-item-icon>
+                            <v-icon v-text="setting[1]"></v-icon>
+                        </v-list-item-icon>
+                    </v-list-item>
                 </v-list-group>
             </v-list>
     </v-navigation-drawer>

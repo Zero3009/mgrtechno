@@ -29,25 +29,25 @@ class AjaxController extends Controller
 		return Response::json($ajax);
 	}
 	public function getCodbarras(){
-		$ajax = Productos::select('prods.codbarras as label','prods.id as value', 'prods.modelo')
+		$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo')
 							->where('prods.estado','=', true)
 							->get();
 
 		return Response::json($ajax);
 	}
 	public function getProveedores(){
-		$ajax = Proveedores::select('provs.nombre as label','provs.id as value')
+		$ajax = Proveedores::select('provs.nombre as text','provs.id as value')
 								->where('provs.estado','=', true)
 								->get();
 		return Response::json($ajax);	
 	}
 	public function getSeriales(Request $request)
 	{
-		$ajax = Stock::select('stock.serial as label')
-						->where('stock.estado','=',true)
-						->get();
+		$ajax = Stock::select('stock.serial as text')
+						->where('stock.estado','=',true);
+			
 
-		return Response::json($ajax);
+		return Response::json($ajax->pluck('text'));
 	}
 	public function LineEntrada()
 	{

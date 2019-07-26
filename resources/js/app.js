@@ -53,13 +53,14 @@ Vue.component('app', require('./components/app.vue').default);
 //Vue.component('vuetable', vuetable);
 //Vue.component('vuetable-pagination', VuetablePagination);
 //Vue.component('vuejs-datepicker', Datepicker);
-/*Vue.component('example-component', require('./components/ExampleComponent.vue'));
+//Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('stock', require('./components/stock.vue').default);
-Vue.component('stocktable', require('./components/tables/stocktable.vue').default);
-*/Vue.component('productos', require('./components/productos.vue').default);
-/*Vue.component('productosnuevo', require('./components/productosnuevo.vue'));
+/*Vue.component('stocktable', require('./components/tables/stocktable.vue').default);
+*///
+Vue.component('productos', require('./components/productos.vue').default);
+//Vue.component('productosnuevo', require('./components/productosnuevo.vue'));
 Vue.component('proveedores', require('./components/proveedores').default);
-Vue.component('filter-bar', FilterBar);*/
+/*Vue.component('filter-bar', FilterBar);*/
 //Vue.use(VueToastr)
 
 /*const store = new Vuex.Store({
@@ -111,8 +112,12 @@ const app = new Vue({
         ['Settings', 'settings'],
       ],
       stock: [
-        ['Alta','add'],
-        ['Recuperar', 'restore_from_trash']
+        ['Alta','add','/admin/stock'],
+        ['Recuperar', 'restore_from_trash','/admin']
+      ],
+      settings:[
+        ['Productos', 'add_circle','/admin/productos'],
+        ['Proveedores','people_outline','/admin/proveedores']
       ],
       cruds: [
         ['Create', 'add'],

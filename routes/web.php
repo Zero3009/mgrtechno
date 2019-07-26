@@ -18,23 +18,23 @@ Route::middleware(['auth'])->group(function()
 {
 	Route::get('/admin/inicio', ['uses' => 'InicioController@Index']);
 	Route::get('/ajax/productos', ['uses' => 'AjaxController@getProductos']);
-Route::get('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
-Route::get('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
-Route::get('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
-Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
-Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
-Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
-Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProds']);
-Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
+	Route::get('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
+	Route::get('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
+	Route::get('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
+	Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
+	Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
+	Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
+	Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProds']);
+	Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
 //FIN AJAX
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/admin/stock', 'StockController@IndexStock');
 //DATATABLES
-Route::get('/datatables/getproveedores', ['uses' => 'DatatablesController@GetProveedores']);
+Route::post('/datatables/getproveedores', ['uses' => 'DatatablesController@GetProveedores']);
 Route::post('/datatables/getproductos', ['uses' => 'DatatablesController@GetProductos']);
-Route::get('/datatables/getstock', ['uses' => 'DatatablesController@GetStock']);
+Route::post('/datatables/getstock', ['uses' => 'DatatablesController@GetStock']);
 Route::get('/datatables/getproveedoreseliminados', ['uses' => 'DatatablesController@GetProveedoresEliminados']);
 Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController@GetProductosEliminados']);
 
@@ -57,7 +57,7 @@ Route::post('/admin/productos/eliminar', ['uses' => 'ProductosController@Elimina
 //FIN PRODUCTOS
 
 //STOCK
-Route::get('/admin/stock', ['uses' => 'StockController@Index']);
+Route::get('/admin/stock', ['uses' => 'StockController@Index'])->name('stock');
 Route::post('/admin/stock/nuevo', ['uses' => 'StockController@NewStock']);
 //Route::get('/admin/stock/editar/{id}', ['uses' => 'StockController@EditStockView']);
 Route::post('/admin/stock/editar', ['uses' => 'StockController@EditStock']);
