@@ -11,7 +11,7 @@ window.Vue = require('vue');
 import jquery from 'jquery';
 import popper from 'popper.js';
 import Vue from 'vue';
-import vSelect from 'vue-select';
+//import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
 import Vuetify from 'vuetify'
@@ -47,7 +47,7 @@ Vue.component('custom-actions-stock', CustomActionsStock)
 Vue.use(BootstrapVue);
 //Vue.use(VueEvents);
 Vue.component('moment', moment);
-Vue.component('v-select', vSelect);
+//Vue.component('v-select', vSelect);
 Vue.component('axios', axios);
 Vue.component('app', require('./components/app.vue').default);
 //Vue.component('vuetable', vuetable);

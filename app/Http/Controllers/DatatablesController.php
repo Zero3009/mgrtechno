@@ -42,7 +42,7 @@ class DatatablesController extends Controller
 						});
 		}
 
-		return Response::json($retornar->paginate($parameters['perPage']));
+		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 	}
 	public function getStock()
 	{

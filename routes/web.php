@@ -53,7 +53,6 @@ Route::get('/admin/productos', ['uses' => 'ProductosController@Index']);
 Route::post('/admin/productos/nuevo', ['uses' => 'ProductosController@NuevoProducto']);
 Route::post('/admin/productos/nuevo/post', ['uses' => 'ProductosController@NuevoProducto']);
 Route::post('/admin/productos/editar', ['uses' => 'ProductosController@EditarProducto']);
-Route::post('/admin/productos/editar/post', ['uses' => 'ProductosController@EditarProducto']);
 Route::post('/admin/productos/eliminar', ['uses' => 'ProductosController@EliminarProducto']);
 //FIN PRODUCTOS
 

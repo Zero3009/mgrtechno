@@ -78,9 +78,15 @@
             fill-height
         >
             <v-layout
-                align-center
-                justify-center
+                align-top
+                allign-space-between
+                column
             >
+            <!--
+                align-top
+                fill-height
+                column
+            -->
                 @yield('content')
                 <!--<v-flex shrink>
                     <v-tooltip right>
