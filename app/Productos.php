@@ -9,7 +9,7 @@ class Productos extends Model
     protected $table = 'prods';
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
-    protected $fillable = ['tipo', 'marca','modelo','codbarras','estado'];
+    protected $fillable = ['tipo', 'marca','modelo','codbarras','serializado','estado'];
 
 	public function setTipoAttribute($value)
 	{

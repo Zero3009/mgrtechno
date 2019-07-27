@@ -17,7 +17,8 @@ class Prods extends Migration
             $table->string('tipo');
             $table->string('marca');
             $table->string('modelo');
-            $table->string('codbarras', 80)->unique();
+            $table->string('codbarras', 80)->unique()->nullable();
+            $table->boolean('serializado')->default(true);
             $table->boolean('estado')->default(true);
             $table->timestamps();
         });
