@@ -50,18 +50,33 @@ class StockController extends Controller
                         $query->save();
                     }
                 }*/
-            for($i=0;$i <sizeof($parameters['seriales']);$i++)
+            if($parameters['seriales'])
+            {
+                for($i=0;$i <sizeof($parameters['seriales']);$i++)
+                {
+                    $query= new Stock;
+                        $query->prods_id = $parameters['codbarras']['value'];
+                        $query->provs_id = $parameters['proveedor']['value'];
+                        $query->serial = $parameters['seriales'][$i];
+                        $query->precio_entrada = $parameters['precio_entrada'];
+                        $query->fecha_entrada = $parameters['fecha_entrada'];
+                        $query->fecha_salida = $parameters['fecha_salida'] ?? null;
+                        $query->precio_salida = $parameters['precio_salida'] ?? null;
+                    $query->save();
+                }
+            }
+            else
             {
                 $query= new Stock;
-                    $query->prods_id = $parameters['codbarras']['value'];
-                    $query->provs_id = $parameters['proveedor']['value'];
-                    $query->serial = $parameters['seriales'][$i];
-                    $query->precio_entrada = $parameters['precio_entrada'];
-                    $query->fecha_entrada = $parameters['fecha_entrada'];
-                    $query->fecha_salida = $parameters['fecha_salida'] ?? null;
-                    $query->precio_salida = $parameters['precio_salida'] ?? null;
-                $query->save();
-            }
+                        $query->prods_id = $parameters['codbarras']['value'];
+                        $query->provs_id = $parameters['proveedor']['value'];
+                        $query->precio_entrada = $parameters['precio_entrada'];
+                        $query->fecha_entrada = $parameters['fecha_entrada'];
+                        $query->fecha_salida = $parameters['fecha_salida'] ?? null;
+                        $query->precio_salida = $parameters['precio_salida'] ?? null;
+                    $query->save();    
+            }    
+                
             DB::commit();
             return response()->json([
                 'status' => 'success',

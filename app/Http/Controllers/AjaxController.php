@@ -29,7 +29,7 @@ class AjaxController extends Controller
 		return Response::json($ajax);
 	}
 	public function getCodbarras(){
-		$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo')
+		$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo','prods.serializado')
 							->where('prods.estado','=', true)
 							->get();
 

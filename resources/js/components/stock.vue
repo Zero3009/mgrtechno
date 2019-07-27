@@ -19,32 +19,25 @@
           ></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
+            v-model="search"
+            append-icon="search"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
-              </template>
-              <v-card  v-if="formCalc == false">
-                <v-card-title>
-                  <span class="headline">{{ fullTitle }}</span>
-                </v-card-title>
-                  <v-form
-                    ref="form"
-                    v-model="valid"
-                  >
-                    <!--<v-text-field
-                      v-model="name"
-                      :counter="10"
-                      :rules="nameRules"
-                      label="Name"
-                      required
-                    ></v-text-field>-->
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
+            </template>
+            <v-card  v-if="formCalc == false">
+              <v-card-title>
+                <span class="headline">{{ fullTitle }}</span>
+              </v-card-title>
+                <v-form
+                  ref="form"
+                  v-model="valid"
+                >
                     <v-card-text>
                       <v-container grid-list-md>
                         <v-layout wrap>
@@ -154,8 +147,10 @@
                         <v-flex xs18 sm9 md6>
                           <v-text-field v-model="selectedItem.precio_salida" type="numeric" label="Precio de salida" required></v-text-field>  
                         </v-flex>
-                        <v-flex xs36 sm18 md12 v-if="formTitle == 'Nuevo producto'">
+
+                        <v-flex xs36 sm18 md12 v-if="serializado == true">
                           <v-combobox
+                            v-if="formTitle == 'Nuevo producto'"
                             v-model="selectedItem.seriales"
                             :items="comboboxes.fields.seriales"
                             :search-input.sync="comboboxes.searching.seriales"
@@ -177,9 +172,8 @@
                               </v-list-item>
                             </template>
                           </v-combobox>
-                        </v-flex>
-                        <v-flex xs36 sm18 md12 v-if="formTitle == 'Editar producto'">
                           <v-combobox
+                            v-else-if="formTitle == 'Editar producto'"
                             v-model="selectedItem.serial"
                             :items="comboboxes.fields.seriales"
                             :search-input.sync="comboboxes.searching.seriales"
@@ -205,209 +199,73 @@
                           </v-layout>
                         </v-container>
                       </v-card-text>
-                <!--<v-form ref="form" v-model="valid" lazy-validation>
-                  <v-card-text>
-                    <v-container grid-list-md>
-                      <v-layout wrap>
-                        <v-flex xs12 sm6 md4>
-                          <v-combobox
-                            v-model="selectedItem.codbarras"
-                            :items="comboboxes.fields.codbarras"
-                            :search-input.sync="comboboxes.searching.codbarras"
-                            hide-selected
-                            hint="Seleccione la marca, si no existe escribala"
-                            label="Código de barras"
-                            persistent-hint
-                            required
-                          >
-                            <template v-slot:no-data>
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>
-                                    No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-                                  </v-list-item-title>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </template>
-                          </v-combobox>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-combobox
-                            v-model="selectedItem.proveedor"
-                            :items="comboboxes.fields.proveedores"
-                            :search-input.sync="comboboxes.searching.proveedor"
-                            hide-selected
-                            hint="Seleccione la marca, si no existe escribala"
-                            label="Proveedor"
-                            persistent-hint
-                          >
-                            <template v-slot:no-data>
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>
-                                    No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-                                  </v-list-item-title>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </template>
-                          </v-combobox>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-menu
-                            ref="fecha_entrada"
-                            v-model="fecha_entrada"
-                            :close-on-content-click="false"
-                            :return-value.sync="selectedItem.fecha_entrada"
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ on }">
-                              <v-text-field
-                                v-model="selectedItem.fecha_entrada"
-                                label="Fecha de entrada"
-                                prepend-icon="event"
-                                readonly
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker locale="es-419" v-model="selectedItem.fecha_entrada" no-title scrollable>
-                              <v-spacer></v-spacer>
-                              <v-btn text color="primary" @click="fecha_entrada = false">Cancel</v-btn>
-                              <v-btn text color="primary" @click="$refs.fecha_entrada.save(selectedItem.fecha_entrada)">OK</v-btn>
-                            </v-date-picker>
-                          </v-menu>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-menu
-                            ref="fecha_salida"
-                            v-model="fecha_salida"
-                            :close-on-content-click="false"
-                            :return-value.sync="selectedItem.fecha_salida"
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ on }">
-                              <v-text-field
-                                v-model="selectedItem.fecha_salida"
-                                label="Fecha de salida"
-                                prepend-icon="event"
-                                readonly
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker locale="es-419" v-model="selectedItem.fecha_salida" no-title scrollable>
-                              <v-spacer></v-spacer>
-                              <v-btn text color="primary" @click="fecha_salida = false">Cancel</v-btn>
-                              <v-btn text color="primary" @click="$refs.fecha_salida.save(selectedItem.fecha_entrada)">OK</v-btn>
-                            </v-date-picker>
-                          </v-menu>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-combobox
-                            v-model="selectedItem.seriales"
-                            :items="comboboxes.fields.seriales"
-                            :search-input.sync="comboboxes.searching.seriales"
-                            hide-selected
-                            small-chips
-                            multiple
-                            hint="Introduzca todos los seriales del mismo producto"
-                            label="Seriales"
-                            persistent-hint
-                          >
-                            <template v-slot:no-data>
-                              <v-list-item>
-                                <v-list-item-content>
-                                  <v-list-item-title>
-                                    No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-                                  </v-list-item-title>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </template>
-                          </v-combobox>
-                          <v-text-field v-model="selectedItem.modelo" label="Modelo"></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-text-field v-model="selectedItem.precio_entrada" type="numeric" label="Precio de entrada" required></v-text-field>  
-                        </v-flex>
-                        <v-flex xs12 sm6 md4>
-                          <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card-text>
--->
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
                     <v-btn :disabled="!valid" color="success" text @click="save">Save</v-btn>
                   </v-card-actions>
                 </v-form>
-              </v-card>
-              <v-card v-else>
+            </v-card>
+            <v-card v-else>
                 <v-card-title>
                   <span class="headline">¿Seguro que quiere eliminar el producto?</span>
                 </v-card-title>
-                <v-card-text>
+              <v-card-text>
 
-                  <v-simple-table
-                    :dense="dense"
-                    :fixed-header="fixedHeader"
-                    :height="height"
-                  >
-                    <tbody>
-                      <tr>
-                        <td>Marca:</td>
-                        <td>{{ selectedItem.marca }}</td>
-                      </tr>
-                      <tr>
-                        <td>Modelo:</td>
-                        <td>{{ selectedItem.modelo }}</td>
-                      </tr>
-                      <tr>
-                        <td>Serial:</td>
-                        <td>{{ selectedItem.serial }}</td>
-                      </tr>
-                      <tr>
-                        <td>Tipo de producto:</td>
-                        <td>{{ selectedItem.tipo }}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.codbarras }}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.proveedor}}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.fecha_entrada }}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.precio_entrada }}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.fecha_salida }}</td>
-                      </tr>
-                      <tr>
-                        <td>Código de barras:</td>
-                        <td>{{ selectedItem.precio_salida }}</td>
-                      </tr>
-                    </tbody>
-                  </v-simple-table>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                </v-card-actions>
-              </v-card>
+                <v-simple-table
+                  dense
+                  fixed-header
+                >
+                  <tbody>
+                    <tr>
+                      <td>Marca:</td>
+                      <td>{{ selectedItem.marca }}</td>
+                    </tr>
+                    <tr>
+                      <td>Modelo:</td>
+                      <td>{{ selectedItem.modelo }}</td>
+                    </tr>
+                    <tr>
+                      <td>Serial:</td>
+                      <td>{{ selectedItem.serial }}</td>
+                    </tr>
+                    <tr>
+                      <td>Tipo de producto:</td>
+                      <td>{{ selectedItem.tipo }}</td>
+                    </tr>
+                    <tr>
+                      <td>Código de barras:</td>
+                      <td>{{ selectedItem.codbarras }}</td>
+                    </tr>
+                    <tr>
+                      <td>Proveedor:</td>
+                      <td>{{ selectedItem.proveedor}}</td>
+                    </tr>
+                    <tr>
+                      <td>Fecha de entrada:</td>
+                      <td>{{ selectedItem.fecha_entrada }}</td>
+                    </tr>
+                    <tr>
+                      <td>Precio de entrada:</td>
+                      <td>{{ selectedItem.precio_entrada }}</td>
+                    </tr>
+                    <tr>
+                      <td>Fecha de salida:</td>
+                      <td>{{ selectedItem.fecha_salida }}</td>
+                    </tr>
+                    <tr>
+                      <td>Precio de salida:</td>
+                      <td>{{ selectedItem.precio_salida }}</td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -415,7 +273,7 @@
       <v-icon
         small
         class="mr-2"
-        @click="editItem(item)"
+        @click="outItem(item)"
       >
         done
       </v-icon>
@@ -557,7 +415,7 @@
       },
       formCalc: function()
       {
-        if(this.formTitle == 'Eliminar producto')
+        if(this.formTitle == 'Eliminar producto' || this.formTitle == 'Salida producto')
         {
           return true
         }
@@ -566,6 +424,17 @@
           return false
         }
 
+      },
+      serializado: function()
+      {
+        if(this.selectedItem.codbarras)
+        {
+          if(this.selectedItem.codbarras.serializado == true)
+          {
+            return true
+          }
+        }
+        return false
       }
     },
     watch: {
@@ -621,7 +490,8 @@
           codbarras: {
             value: item.prods_id,
             text: item.codbarras,
-            modelo: item.modelo
+            modelo: item.modelo,
+            serializado: item.serializado,
           },
           tipo: item.tipo,
           marca: item.marca,
@@ -641,6 +511,12 @@
 
       deleteItem (item) {
         this.formTitle = "Eliminar producto"
+        this.selectedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+      outItem (item)
+      {
+        this.formTitle = "Salida producto"
         this.selectedItem = Object.assign({}, item)
         this.dialog = true
       },
