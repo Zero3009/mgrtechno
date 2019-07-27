@@ -99,9 +99,11 @@
                       <v-flex xs12 sm6 md4>
                         <v-text-field v-model="selectedItem.modelo" label="Modelo"></v-text-field>
                       </v-flex>
-                      <!--<v-flex xs12 sm6 md4>
-                        <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                      </v-flex>-->
+                      <v-flex xs12 sm6 md4>
+                        <v-container fluid>
+                          <v-switch v-model="selectedItem.serializado" color="blue" label="Serializado"></v-switch>
+                        </v-container>
+                      </v-flex>
                     </v-layout>
                   </v-container>
                 </v-card-text>
@@ -152,6 +154,9 @@
           </v-dialog>
         </v-toolbar>
       </template>
+    <template v-slot:item.serializado="{ item }">
+      <v-chip :color="getColor(item.serializado)" dark>{{ getLabel(item.serializado)}}</v-chip>
+    </template>
     <template v-slot:item.action="{ item }">
       <v-icon
         small
@@ -168,7 +173,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <v-btn color="primary" @click="initialize">Refresh</v-btn>
     </template>  
       </v-data-table>
     </v-card>
@@ -201,6 +206,7 @@
           { text: 'Tipo de producto', value: 'tipo' },
           { text: 'Modelo', value: 'modelo' },
           { text: 'Marca', value: 'marca' },
+          { text: 'Serializado', value: 'serializado'},
           { text: 'Actions', value: 'action', sortable: false },
         ],
         //EXPERIMENTAL
@@ -217,14 +223,16 @@
           codbarras: 0,
           tipo: "",
           marca: "",
-          modelo: ""
+          modelo: "",
+          serializado: false
         },
         selectedItem: {
           id: 0,
           codbarras: 0,
           tipo: "",
           marca: "",
-          modelo: ""
+          modelo: "",
+          serializado: false
         }
       }
     },
@@ -265,11 +273,35 @@
       this.cargarSelects()
     },
     methods: {
+      getColor(item)
+      {
+        console.log(item)
+        if(item == true)
+        {
+          return 'green'
+        }
+        else
+        {
+          return 'red'
+        }
+      },
+      getLabel(item)
+      {
+        if(item == true)
+        {
+          return 'Activo'
+        }
+        else
+        {
+          return 'Inactivo'
+        }
+      },
       getDataFromApi () {
         this.loading = true
-          const { sortBy, descending, page, itemsPerPage } = this.options
+          const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
           axios.post('/datatables/getproductos',
           {
+            sortDesc: this.options.sortDesc,
             search: this.search,
             sortBy: this.options.sortBy,
             descending: this.options.descending,
@@ -281,80 +313,9 @@
             this.loading = false;
           });
       },
-      /*initialize () {
-        this.desserts = [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-          },
-        ]
-      },*/
+      initialize () {
+        this.getDataFromApi();
+      },
       newItem ()
       {
         this.formTitle = "Nuevo producto"

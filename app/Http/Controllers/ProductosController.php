@@ -48,6 +48,7 @@ class ProductosController extends Controller
                 $query->modelo = $request->modelo;
                 $query->marca = $request->marca;
                 $query->codbarras = $request->codbarras;
+                $query->serializado = $request->serializado;
             $query->save();
             DB::commit();
             return 'work';

@@ -8,6 +8,8 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import Vuelidate from 'vuelidate'
+//import { required, maxLength, email } from 'vuelidate/lib/validators'
 import jquery from 'jquery';
 import popper from 'popper.js';
 import Vue from 'vue';
@@ -18,33 +20,33 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify)
-
+Vue.use(Vuelidate)
 //import Datepicker from 'vuejs-datepicker';
 import axios from 'axios';
 //import vuetable from 'vuetable-2';
 //import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
 import moment from 'moment';
-import BootstrapVue from 'bootstrap-vue';
+//import BootstrapVue from 'bootstrap-vue';
 //import 'es6-promise/auto';
 //import Vuex from 'vuex';
-import FilterBar from './components/FilterBar';
+//import FilterBar from './components/FilterBar';
 //import VueEvents from 'vue-events'
-import CustomActionsProductos from './components/tables/actions/CustomActionsProductos'
-import CustomActionsStock from './components/tables/actions/CustomActionsStock'
+//import CustomActionsProductos from './components/tables/actions/CustomActionsProductos'
+//import CustomActionsStock from './components/tables/actions/CustomActionsStock'
 import '@mdi/font/css/materialdesignicons.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 //import VueToastr from '@deveodk/vue-toastr'
 //import '@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css'
 
-Vue.component('custom-actions-productos', CustomActionsProductos)
-Vue.component('custom-actions-stock', CustomActionsStock)
+//Vue.component('custom-actions-productos', CustomActionsProductos)
+//Vue.component('custom-actions-stock', CustomActionsStock)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-Vue.use(BootstrapVue);
+//Vue.use(BootstrapVue);
 //Vue.use(VueEvents);
 Vue.component('moment', moment);
 //Vue.component('v-select', vSelect);

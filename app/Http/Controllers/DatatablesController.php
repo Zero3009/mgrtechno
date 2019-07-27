@@ -38,7 +38,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//return $parameters['search'];
-		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.codbarras'])
+		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.codbarras','prods.serializado'])
 						->where('estado','=', true);
 		if($parameters['search'] != null)
 		{
@@ -53,6 +53,18 @@ class DatatablesController extends Controller
 								}
 						});
 		}
+		if(sizeof($parameters['sortDesc'])> 0 && sizeof($parameters['sortBy'])> 0)
+		{
+			if($parameters['sortDesc'][0] == true)
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'desc');	
+			}
+			else
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'asc');
+			}
+			
+		}
 
 		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 	}
@@ -60,7 +72,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
-		$retornar = Stock::select(['stock.id','prods.codbarras','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre'])
+		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.codbarras','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor'])
 							->join('prods','stock.prods_id','=','prods.id')
 							->join('provs','stock.provs_id','=','provs.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
@@ -73,11 +85,27 @@ class DatatablesController extends Controller
 								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
 								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
 								$retornar->orWhere('stock.serial','ilike',"%$filtro%");
+								$retornar->orWhere('stock.fecha_salida','ilike',"%$filtro%");
+								$retornar->orWhere('stock.fecha_entrada','ilike',"%$filtro%");
 								if(is_numeric($filtro))
 								{
+									$retornar->orWhere('stock.precio_entrada','ilike',"%$filtro%");
+									$retornar->orWhere('stock.precio_salida','ilike',"%$filtro%");
 									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
 								}
 						});
+		}
+		if(sizeof($parameters['sortDesc'])> 0 && sizeof($parameters['sortBy'])> 0)
+		{
+			if($parameters['sortDesc'][0] == true)
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'desc');	
+			}
+			else
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'asc');
+			}
+			
 		}
 
 		//					->orderBy("$ordenar[0]", "$ordenar[1]")
