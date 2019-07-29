@@ -1,16 +1,5 @@
 <template>
     <v-card>
-      <!--<v-card-title>
-        Stock
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title>-->
       <v-data-table
         :search="search"
         :headers="headers"
@@ -22,7 +11,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-          <v-toolbar-title>Proveedores</v-toolbar-title>
+          <v-toolbar-title>Clientes</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -148,8 +137,8 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'ID', value:'id'},
           { text: 'Nombre', value: 'nombre' },
+          { text: 'Apellido', value: 'apellido'},
           { text: 'Telefono', value: 'tel' },
           { text: 'Actions', value: 'action', sortable: false },
         ],
@@ -213,11 +202,12 @@
     methods: {
       getDataFromApi () {
         this.loading = true
-          const { sortBy, descending, page, itemsPerPage } = this.options
-          axios.post('/datatables/getproveedores',
+          const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
+          axios.post('/datatables/getclientes',
           {
             search: this.search,
             sortBy: this.options.sortBy,
+            sortDesc: this.options.sortDesc,
             descending: this.options.descending,
             page: this.options.page,
             itemsPerPage: this.options.itemsPerPage

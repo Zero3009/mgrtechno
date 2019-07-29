@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cliente extends Model
+class Clientes extends Model
 {
     protected $table = 'clientes';
 	protected $primaryKey = 'id';
@@ -27,7 +27,7 @@ class Cliente extends Model
 	{	
     	$this->attributes['correo'] = strtolower($value);
 	}
-	public function setCorreoAttribute($value)
+	public function setDomicilioAttribute($value)
 	{	
     	$this->attributes['domicilio'] = strtoupper($value);
 	}

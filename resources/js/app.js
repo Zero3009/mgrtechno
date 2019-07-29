@@ -28,6 +28,7 @@ Vue.component('stock', require('./components/stock.vue').default);
 
 Vue.component('productos', require('./components/productos.vue').default);
 Vue.component('proveedores', require('./components/proveedores').default);
+Vue.component('clientes', require('./components/clientes').default);
 
 const app = new Vue({
     el: '#app',
@@ -46,7 +47,8 @@ const app = new Vue({
       ],
       settings:[
         ['Productos', 'add_circle','/admin/productos'],
-        ['Proveedores','people_outline','/admin/proveedores']
+        ['Proveedores','people_outline','/admin/proveedores'],
+        ['Clientes','people','/admin/clientes']
       ],
       cruds: [
         ['Create', 'add'],

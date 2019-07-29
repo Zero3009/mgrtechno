@@ -213,11 +213,12 @@
     methods: {
       getDataFromApi () {
         this.loading = true
-          const { sortBy, descending, page, itemsPerPage } = this.options
+          const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
           axios.post('/datatables/getproveedores',
           {
             search: this.search,
             sortBy: this.options.sortBy,
+            sortDesc: this.options.sortDesc,
             descending: this.options.descending,
             page: this.options.page,
             itemsPerPage: this.options.itemsPerPage

@@ -33,6 +33,18 @@ class DatatablesController extends Controller
 								}*/
 						});
 		}
+		if(sizeof($parameters['sortDesc'])> 0 && sizeof($parameters['sortBy'])> 0)
+		{
+			if($parameters['sortDesc'][0] == true)
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'desc');	
+			}
+			else
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'asc');
+			}
+			
+		}
 		return Response::json($retornar->paginate($parameters['itemsPerPage']));
 	}
 	public function GetProductos(Request $request)
@@ -148,8 +160,10 @@ class DatatablesController extends Controller
 						});
 		return $datatables->make(true); 
 	}
-	public function getClientes()
+	public function getClientes(Request $request)
 	{
+
+		$parameters = $request->all();
 		$retornar = Clientes::select('nombre', 'apellido','correo','documento','domicilio','tel')
 							->where('estado','=', true);
 		if($parameters['search'] != null)

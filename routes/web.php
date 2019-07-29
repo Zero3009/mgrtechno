@@ -35,12 +35,13 @@ Route::get('/admin/stock', 'StockController@IndexStock');
 Route::post('/datatables/getproveedores', ['uses' => 'DatatablesController@GetProveedores']);
 Route::post('/datatables/getproductos', ['uses' => 'DatatablesController@GetProductos']);
 Route::post('/datatables/getstock', ['uses' => 'DatatablesController@GetStock']);
+Route::post('/datatables/getclientes', ['uses' => 'DatatablesController@GetClientes']);
 Route::get('/datatables/getproveedoreseliminados', ['uses' => 'DatatablesController@GetProveedoresEliminados']);
 Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController@GetProductosEliminados']);
 
 //PROVEEDORES
 Route::get('/admin/proveedores', 'ProveedoresController@Index');
-
+Route::get('/admin/clientes', 'ClientesController@Index');
 Route::post('/admin/proveedores/nuevo/post', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::post('/admin/proveedores/nuevo', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::get('/admin/proveedores/editar/{id}', ['uses' => 'ProveedoresController@EditarProveedorView']);
