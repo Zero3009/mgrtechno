@@ -15,4 +15,8 @@ class Proveedores extends Model
 	{
 	    $this->attributes['nombre'] = strtoupper($value);
 	}
+	public function setTelAttribute($value)
+	{
+	    $this->attributes['tel'] = strtoupper($value);
+	}
 }

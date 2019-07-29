@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Proveedores;
 use App\Productos;
 use App\Stock;
+use App\Clientes;
 use Response;
 use DB;
 use Vuetable;
@@ -77,6 +78,14 @@ class DatatablesController extends Controller
 							->join('provs','stock.provs_id','=','provs.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
 							->where('stock.estado','=',true);
+		if($parameters['datafilter'] == 'disponible')
+		{
+			$retornar->where('disponible','=',true);
+		}
+		else if ($parameters['datafilter'] == 'nodisponible') 
+		{
+			$retornar->where('disponible','=',false);
+		}
 		if($parameters['search'] != null)
 		{
 			$filtro = $parameters['search'];
@@ -139,4 +148,40 @@ class DatatablesController extends Controller
 						});
 		return $datatables->make(true); 
 	}
+	public function getClientes()
+	{
+		$retornar = Clientes::select('nombre', 'apellido','correo','documento','domicilio','tel')
+							->where('estado','=', true);
+		if($parameters['search'] != null)
+		{
+			$filtro = $parameters['search'];
+			$retornar = $retornar->where(function ($retornar) use ($filtro) {
+								$retornar->orWhere('nombre','ilike',"%$filtro%");
+								$retornar->orWhere('apellido','ilike',"%$filtro%");
+								$retornar->orWhere('correo','ilike',"%$filtro%");
+								$retornar->orWhere('domicilio','ilike',"%$filtro%");
+								if(is_numeric($filtro))
+								{
+									$retornar->orWhere('documento','ilike',"%$filtro%");
+								}
+						});
+		}
+		if(sizeof($parameters['sortDesc'])> 0 && sizeof($parameters['sortBy'])> 0)
+		{
+			if($parameters['sortDesc'][0] == true)
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'desc');	
+			}
+			else
+			{
+				$retornar->orderBy($parameters['sortBy'][0], 'asc');
+			}
+			
+		}
+
+		//					->orderBy("$ordenar[0]", "$ordenar[1]")
+		//					->paginate(15);
+		return Response::json($retornar->paginate($parameters['itemsPerPage']));
+	}
+
 }

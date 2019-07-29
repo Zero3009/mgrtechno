@@ -50,6 +50,14 @@ class StockController extends Controller
                         $query->save();
                     }
                 }*/
+            if($parameters['fecha_salida'] != null)
+            {
+                $disp = false;
+            }
+            else
+            {
+                $disp = true;
+            }
             if($parameters['seriales'])
             {
                 for($i=0;$i <sizeof($parameters['seriales']);$i++)
@@ -60,6 +68,7 @@ class StockController extends Controller
                         $query->serial = $parameters['seriales'][$i];
                         $query->precio_entrada = $parameters['precio_entrada'];
                         $query->fecha_entrada = $parameters['fecha_entrada'];
+                        $query->disponible = $disp;
                         $query->fecha_salida = $parameters['fecha_salida'] ?? null;
                         $query->precio_salida = $parameters['precio_salida'] ?? null;
                     $query->save();
@@ -72,9 +81,10 @@ class StockController extends Controller
                         $query->provs_id = $parameters['proveedor']['value'];
                         $query->precio_entrada = $parameters['precio_entrada'];
                         $query->fecha_entrada = $parameters['fecha_entrada'];
+                        $query->disponible = $disp;
                         $query->fecha_salida = $parameters['fecha_salida'] ?? null;
                         $query->precio_salida = $parameters['precio_salida'] ?? null;
-                    $query->save();    
+                $query->save();    
             }    
                 
             DB::commit();
@@ -105,14 +115,6 @@ class StockController extends Controller
         }
     
     }
-    /*public function EditStockView($id)
-    {
-        $stock = Stock::select('stock.id','prods.codbarras','stock.serial as serial','provs.nombre','prods.modelo','prods.id as prodsid', 'stock.fechaEntrada', 'stock.precioEntrada','stock.precioSalida','stock.fechaSalida')
-                        ->join('provs','stock.provs_id','=','provs.id')
-                        ->join('prods','stock.prods_id','=','prods.id')
-                        ->where('stock.id','=', $id)->first();
-        return View::make('stock.stock_editar')->with('stock', $stock);
-    }*/
     public function EditStock(Request $request)
     {
         $this->validate($request, [
@@ -124,13 +126,22 @@ class StockController extends Controller
         ]);
 
         $post = $request->all();
-        
+        if($post['fecha_salida'] != null)
+        {
+            $disp = false;
+        }
+        else
+        {
+            $disp = true;
+        }
+
         Stock::find($post['id'])->update([
             'codbarras' => $post['codbarras']['value'],
             'fecha_entrada' => $post['fecha_entrada'],
             'precio_entrada' => $post['precio_entrada'],
             'serial' => $post['serial'],
             'provs_id' => $post['proveedor']['value'],
+            'disponible' => $disp,
             'fecha_salida' => $post['fecha_salida'] ?? null,
             'precio_salida' => $post['precio_salida'] ?? null 
         ]);

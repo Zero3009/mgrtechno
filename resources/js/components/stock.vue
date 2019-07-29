@@ -1,5 +1,12 @@
 <template>
     <v-card>
+      <v-card-title>
+        <v-radio-group hide-details v-model="disponible" row>
+            <v-radio label="Todos" value="todos"></v-radio>
+            <v-radio label="Disponible" value="disponible"></v-radio>
+            <v-radio label="No disponible" value="nodisponible"></v-radio>
+        </v-radio-group>
+      </v-card-title>
       <v-data-table
         :search="search"
         :headers="headers"
@@ -12,11 +19,13 @@
         <template v-slot:top>
           <v-toolbar flat>
           <v-toolbar-title>Productos</v-toolbar-title>
-          <v-divider
+          <!--<v-divider
             class="mx-4"
             inset
             vertical
-          ></v-divider>
+          ></v-divider>-->
+          <v-spacer></v-spacer>
+          
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -322,6 +331,7 @@
         /*fecha_salidaRules: [
           v => !!v || 'Fecha de salida requerida'
         ],*/
+        disponible: "todos",
         valid: true,
         formTitle: "",
         fecha_entrada: false,
@@ -350,7 +360,6 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'ID', value:'id'},
           { text: 'Código de barras', value: 'codbarras' },
           { text: 'Tipo de producto', value: 'tipo' },
           { text: 'Modelo', value: 'modelo' },
@@ -438,6 +447,13 @@
       }
     },
     watch: {
+      disponible:
+      {
+        handler () {
+          this.getDataFromApi()
+        },
+        deep: true,
+      },
       search:{
         handler () {
           this.getDataFromApi()
@@ -464,6 +480,7 @@
           const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
           axios.post('/datatables/getstock',
           {
+            datafilter: this.disponible,
             sortDesc: this.options.sortDesc,
             search: this.search,
             sortBy: this.options.sortBy,
