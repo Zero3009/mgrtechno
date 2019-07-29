@@ -117,41 +117,24 @@ class StockController extends Controller
     {
         $this->validate($request, [
             'codbarras' => 'required',
-            'fechaEntrada' => 'required',
-            'precioEntrada' => 'required',
+            'fecha_entrada' => 'required',
+            'precio_entrada' => 'required',
             'proveedor' => 'required',
             'id' => 'required'
         ]);
 
         $post = $request->all();
-        if($request->input('fechaSalida') && $request->input('precioSalida')){
-            Stock::find($post['id'])->update([
-                'fecha_entrada' => $post['fechaEntrada'],
-                'precio_entrada' => $post['precioEntrada'],
-                'serial' => $post['serial'],
-                'provs_id' => $post['proveedor'],
-                'fecha_salida' => $post['fechaSalida'],
-                'precio_salida' => $post['precioSalida'] 
-            ]);
-        }else if($request->input('fechaSalida')){
-            Stock::find($post['id'])->update([
-                'fecha_entrada' => $post['fechaEntrada'],
-                'precio_entrada' => $post['precioEntrada'],
-                'serial' => $post['serial'],
-                'provs_id' => $post['proveedor'],
-                'fecha_salida' => $post['fechaSalida'],
-                'precio_salida' => null
-            ]);
-        }else{
-            Stock::find($post['id'])->update([
-                'fecha_entrada' => $post['fechaEntrada'],
-                'precio_entrada' => $post['precioEntrada'],
-                'serial' => $post['serial'],
-                'provs_id' => $post['proveedor'],
-                'precio_salida' => null,
-                'fecha_salida' => null
-            ]);
-        }
+        
+        Stock::find($post['id'])->update([
+            'codbarras' => $post['codbarras']['value'],
+            'fecha_entrada' => $post['fecha_entrada'],
+            'precio_entrada' => $post['precio_entrada'],
+            'serial' => $post['serial'],
+            'provs_id' => $post['proveedor']['value'],
+            'fecha_salida' => $post['fecha_salida'] ?? null,
+            'precio_salida' => $post['precio_salida'] ?? null 
+        ]);
+        
         return Redirect::to('/admin/stock')->with('status', 'Se ha editado correctamente el registro.');
     }
     public function EliminarStock(Request $request)
