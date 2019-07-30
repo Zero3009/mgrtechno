@@ -1,11 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-
-                <proveedores style="width: 100%"></proveedores>
-
-@stop
+    <proveedores></proveedores>
+@endsection
 @section('js')
-@push('scripts')
-<script>
-</script>
+	<script type="text/javascript" src="{{mix('js/proveedores.js')}} "></script>
 @endsection

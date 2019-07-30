@@ -11,6 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
+mix.js('resources/js/stock.js', 'public/js')
+	.js('resources/js/productos.js', 'public/js')
+	.js('resources/js/proveedores.js', 'public/js')
+	.js('resources/js/clientes.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sourceMaps();

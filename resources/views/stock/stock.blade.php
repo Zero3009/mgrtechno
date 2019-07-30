@@ -1,12 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-            
-                        <stock></stock>
-
-@stop
+    <stock></stock>
+@endsection
 @section('js')
-@push('scripts')
-<script>
-</script>
-
+	<script type="text/javascript" src="{{mix('js/stock.js')}} "></script>
 @endsection
