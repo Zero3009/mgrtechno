@@ -41,8 +41,21 @@
                         <v-text-field v-model="selectedItem.nombre" label="Nombre"></v-text-field>
                       </v-flex>
                       <v-flex xs18 sm9 md6>
+                        <v-text-field v-model="selectedItem.apellido" label="Apellido"></v-text-field>
+                      </v-flex>
+                      <v-flex xs18 sm9 md6>
+                        <v-text-field v-model="selectedItem.correo" label="Correo"></v-text-field>
+                      </v-flex>
+                      <v-flex xs18 sm9 md6>
+                        <v-text-field v-model="selectedItem.dni" label="DNI"></v-text-field>
+                      </v-flex>
+                      <v-flex xs18 sm9 md6>
                         <v-text-field v-model="selectedItem.tel" label="Telefono"></v-text-field>
                       </v-flex>
+                      <v-flex xs18 sm9 md6>
+                        <v-text-field v-model="selectedItem.domicilio" label="Domicilio"></v-text-field>
+                      </v-flex>
+
                     </v-layout>
                   </v-container>
                 </v-card-text>
@@ -108,9 +121,9 @@
         delete
       </v-icon>
     </template>
-    <!--<template v-slot:no-data>
+    <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>-->
+    </template>
       </v-data-table>
     </v-card>
 </template>
@@ -139,7 +152,10 @@
         headers: [
           { text: 'Nombre', value: 'nombre' },
           { text: 'Apellido', value: 'apellido'},
+          { text: 'DNI', value: 'documento'},
           { text: 'Telefono', value: 'tel' },
+          { text: 'Domicilio', value: 'domicilio'},
+          { text: 'Correo', value: 'correo'},
           { text: 'Actions', value: 'action', sortable: false },
         ],
         //EXPERIMENTAL
@@ -152,14 +168,20 @@
           protein: 0,
         },
         defaultItem: {
-          id: 0,
-          nombre: "",
-          tel: ""
+          id: null,
+          nombre: null,
+          apellido: null,
+          domicilio: null,
+          tel: null,
+          dni: null,
         },
         selectedItem: {
-          id: 0,
-          nombre: "",
-          tel: ""
+          id: null,
+          nombre: null,
+          apellido: null,
+          domicilio: null,
+          tel: null,
+          dni: null,
         }
       }
     },
@@ -247,7 +269,7 @@
       save () {
         if(this.formTitle == "Nuevo producto")
         {
-          axios.post('/admin/proveedores/nuevo',
+          axios.post('/admin/clientes/nuevo',
                 this.selectedItem).then(response => {
                   
                 });
@@ -288,7 +310,10 @@
             this.comboboxes.fields.marcas = response.data;    
         });
       },
-    
+      initialize: function()
+      {
+        this.getDataFromApi();
+      }
     },
   }
 

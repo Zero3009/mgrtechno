@@ -42,6 +42,10 @@
             <v-card  v-if="formCalc == false">
               <v-card-title>
                 <span class="headline">{{ fullTitle }}</span>
+                <!--<v-progress-linear
+                  v-model="valueDeterminate"
+                  color="yellow accent-4"
+                ></v-progress-linear>-->
               </v-card-title>
                 <v-form
                   ref="form"
@@ -51,7 +55,7 @@
                       <v-container grid-list-md>
                         <v-layout wrap>
                           <v-flex xs18 sm9 md6>
-                            <v-combobox
+                            <!--<v-combobox
                                 v-model="selectedItem.codbarras"
                                 :items="comboboxes.fields.codbarras"
                                 :search-input.sync="comboboxes.searching.codbarras"
@@ -71,7 +75,31 @@
                                     </v-list-item-content>
                                   </v-list-item>
                                 </template>
-                              </v-combobox>
+                              </v-combobox>-->
+                            <v-autocomplete
+                              v-model="selectedItem.codbarras"
+                              :items="comboboxes.fields.codbarras"
+                              :loading="isLoading"
+                              :search-input.sync="searchAuto"
+                              color="white"
+                              hide-no-data
+                              hide-selected
+                              item-text="modelo"
+                              item-value="id"
+                              no-filter
+                              label="Código de barras"
+                              placeholder="Start typing to Search"
+                              prepend-icon="mdi-database-search"
+                              return-object
+                            >
+                               <template v-slot:item="data">
+                                  <v-list-item-content>
+                                    <v-list-item-title v-html="data.item.modelo"></v-list-item-title>
+                                    <v-list-item-subtitle v-html="'EAN:' + data.item.ean"></v-list-item-subtitle>
+                                    <v-list-item-subtitle v-html="'UPC:' + data.item.upc"></v-list-item-subtitle>
+                                  </v-list-item-content>
+                              </template>
+                            </v-autocomplete>
                             </v-flex>
                             <v-flex xs18 sm9 md6>
                               <v-combobox
@@ -311,6 +339,11 @@
     
     data () {
       return {
+        descriptionLimit: 60,
+        entries: [],
+        isLoading: false,
+        model: null,
+        searchAuto: null,
         serialesRules: [
           v => !!v || 'Debe ingresar al menos un serial'
         ],
@@ -360,7 +393,8 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'Código de barras', value: 'codbarras' },
+          { text: 'Código UPC', value: 'upc' },
+          { text: 'Código EAN', value: 'ean'},
           { text: 'Tipo de producto', value: 'tipo' },
           { text: 'Modelo', value: 'modelo' },
           { text: 'Marca', value: 'marca' },
@@ -372,15 +406,6 @@
           { text: 'Precio de salida', value: 'precio_salida'},
           { text: 'Actions', value: 'action', sortable: false }
         ],
-        //EXPERIMENTAL
-        editedIndex: -1,
-        editedItem: {
-          name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          protein: 0,
-        },
         defaultItem: {
           id: 0,
           codbarras: null,
@@ -469,12 +494,47 @@
       dialog (val) {
         val || this.close()
       },
+
+      searchAuto (val) {
+        axios.post('/ajax/codbarras',
+          {
+            search:val
+          }).then(response => {
+            this.comboboxes.fields.codbarras = response.data;
+        });
+      },
+
+
     },
     mounted () {
       this.getDataFromApi()
       this.cargarSelects()
     },
     methods: {
+      fields () {
+        if (!this.model) return []
+
+        return Object.keys(this.model).map(key => {
+          return {
+            key,
+            value: this.model[key] || 'n/a',
+          }
+        })
+      },
+      items () {
+        return this.entries.map(entry => {
+          const Description = entry.Description.length > this.descriptionLimit
+            ? entry.Description.slice(0, this.descriptionLimit) + '...'
+            : entry.Description
+
+          return Object.assign({}, entry, { Description })
+        })
+      },
+
+
+
+
+
       getDataFromApi () {
         this.loading = true
           const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
@@ -501,12 +561,20 @@
       },
       editItem (item) {
         this.formTitle = "Editar producto"
-        console.log(item)
+        if(item.upc != null)
+        {
+          this.searchAuto = item.upc;
+        }
+        else
+        {
+          this.searchAuto = item.ean;
+        }
         this.selectedItem = Object.assign({}, {
           id: item.id,
           codbarras: {
-            value: item.prods_id,
-            text: item.codbarras,
+            id: item.prods_id,
+            upc: item.upc,
+            ean: item.ean,
             modelo: item.modelo,
             serializado: item.serializado,
           },
@@ -576,7 +644,7 @@
       {
         this.getTiposProductos();
         this.getMarcas();
-        this.getCodbarras();
+        //this.getCodbarras();
         this.getProveedores();
         this.getSeriales();
       },

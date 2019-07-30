@@ -21,11 +21,6 @@ class ProveedoresController extends Controller
     {
         return view('proveedores.proveedores_nuevo');
     }
-    public function EditarProveedorView($id)
-    {
-        $prov = Proveedores::select('*')->where('id','=', $id)->first();
-        return View::make('proveedores.proveedores_editar')->with('prov', $prov); 
-    }
     public function EliminarProveedor(Request $request)
     {
         //return $request['id'];
@@ -38,7 +33,7 @@ class ProveedoresController extends Controller
         $queryinfo->save();
         return Redirect::to('/admin/proveedores')->with('status', 'Se ha eliminado correctamente el usuario.');
     }
-    public function EditarProveedorUpdate(Request $request)
+    public function EditarProveedor(Request $request)
     {
         $this->validate($request, [
             'nombre' => 'required',
@@ -71,12 +66,23 @@ class ProveedoresController extends Controller
             DB::commit();
             return 'work';
         }
-        catch(Exception $e)
+        catch(\Illuminate\Database\QueryException $e)
         {
-        	DB::rollback();
-        	return redirect()
-                ->back()
-                ->withErrors('Se ha producido un errro: ( ' . $e->getCode() . ' ): ' . $e->getMessage().' - Copie este texto y envielo a informática');
+            DB::rollback();
+            //return $e;
+            if($e->getCode() == 23502)
+            {
+                return response()->json([
+                    'status' => 'error',
+                    'title'  => 'Resultado: ya existe el registro',
+                    'msg'    =>  $e->getMessage(),
+                    'type'   => 'error' 
+                ],400);    
+            }
+            return response()->json([
+                'status' => 'error',
+                'msg'    => 'Error ' . $e->getCode() . ': ' . $e->getMessage() . 'Contacte a informática'
+            ],404);
         }
     }
 }

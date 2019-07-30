@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function()
 	Route::get('/admin/inicio', ['uses' => 'InicioController@Index']);
 	Route::get('/ajax/productos', ['uses' => 'AjaxController@getProductos']);
 	Route::get('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
-	Route::get('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
+	Route::post('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
 	Route::get('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
 	Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
 	Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
@@ -42,10 +42,10 @@ Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController
 //PROVEEDORES
 Route::get('/admin/proveedores', 'ProveedoresController@Index');
 Route::get('/admin/clientes', 'ClientesController@Index');
+Route::post('/admin/clientes/nuevo', 'ClientesController@NuevoCliente');
 Route::post('/admin/proveedores/nuevo/post', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::post('/admin/proveedores/nuevo', ['uses' => 'ProveedoresController@NuevoProveedor']);
-Route::get('/admin/proveedores/editar/{id}', ['uses' => 'ProveedoresController@EditarProveedorView']);
-Route::post('/admin/proveedores/editar/post', ['uses' => 'ProveedoresController@EditarProveedorUpdate']);
+Route::post('/admin/proveedores/editar', ['uses' => 'ProveedoresController@EditarProveedor']);
 Route::post('/admin/proveedores/eliminar', ['uses' => 'ProveedoresController@EliminarProveedor']);
 //FIN PROVEEDORES
 

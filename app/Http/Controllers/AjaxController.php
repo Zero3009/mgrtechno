@@ -28,12 +28,29 @@ class AjaxController extends Controller
 		
 		return Response::json($ajax);
 	}
-	public function getCodbarras(){
-		$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo','prods.serializado')
+	public function getCodbarras(Request $request){
+		/*$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo','prods.serializado')
 							->where('prods.estado','=', true)
-							->get();
-
-		return Response::json($ajax);
+							->get();*/
+		$parameters = $request->all();
+		$ajax = Productos::select('prods.modelo','prods.ean as ean','prods.upc as upc','prods.id','prods.serializado');
+				if($parameters['search'])
+				{
+		
+					$filtro = $parameters['search'];
+					$ajax = $ajax->where(function ($ajax) use ($filtro) {
+										
+										//$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+										if(is_numeric($filtro))
+										{
+											$ajax->orWhere('prods.ean','ilike',"%$filtro%");
+											$ajax->orWhere('prods.upc','ilike',"%$filtro%");
+											//$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+										}
+					});
+		
+				}
+		return Response::json($ajax->get());
 	}
 	public function getProveedores(){
 		$ajax = Proveedores::select('provs.nombre as text','provs.id as value')

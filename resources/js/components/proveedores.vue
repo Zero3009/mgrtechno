@@ -49,7 +49,7 @@
                   <v-container grid-list-md>
                     <v-layout wrap>
                       <v-flex xs18 sm9 md6>
-                        <v-text-field v-model="selectedItem.nombre" label="Nombre"></v-text-field>
+                        <v-text-field v-model="selectedItem.nombre" label="Nombre" :rules="nombreRules"></v-text-field>
                       </v-flex>
                       <v-flex xs18 sm9 md6>
                         <v-text-field v-model="selectedItem.tel" label="Telefono"></v-text-field>
@@ -66,7 +66,7 @@
               </v-card>
               <v-card v-else>
                 <v-card-title>
-                  <span class="headline">¿Seguro que quiere eliminar el producto?</span>
+                  <span class="headline">¿Seguro que quiere eliminar el proveedor?</span>
                 </v-card-title>
                 <v-card-text>
 
@@ -78,20 +78,20 @@
                     <tbody>
                       <tr>
                         <td>Marca:</td>
-                        <td>{{ selectedItem.marca }}</td>
+                        <td>{{ selectedItem.nombre }}</td>
                       </tr>
                       <tr>
                         <td>Modelo:</td>
-                        <td>{{ selectedItem.modelo }}</td>
+                        <td>{{ selectedItem.tel }}</td>
                       </tr>
-                      <tr>
+                      <!--<tr>
                         <td>Tipo de producto:</td>
                         <td>{{ selectedItem.tipo }}</td>
                       </tr>
                       <tr>
                         <td>Código de barras:</td>
                         <td>{{ selectedItem.codbarras }}</td>
-                      </tr>
+                      </tr>-->
                     </tbody>
                   </v-simple-table>
                 </v-card-text>
@@ -123,12 +123,50 @@
       <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>-->
       </v-data-table>
+      <!--<v-btn
+        dark
+        color="red darken-2"
+        @click="snackbar.active = true"
+      >
+        Open Snackbar
+      </v-btn>-->
+      <v-snackbar
+      v-model="snackbar.active"
+      :color="snackbar.color"
+      :multiLine="snackbar.multiline"
+      >
+      <v-icon>
+        {{snackbar.icon}}
+      </v-icon>
+      <strong>{{snackbar.title}}</strong>
+      
+      {{snackbar.text}}
+        <v-btn
+          color="black"
+          text
+          @click="snackbar.active = false"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
     </v-card>
 </template>
 <script>
   export default {
     data () {
       return {
+        nombreRules: [
+          v => !!v || 'Este campo es requerido'
+        ],
+        snackbar: 
+        {
+          active: false,
+          text: null,
+          color: "success",
+          multiline: true,
+          icon: null,
+          title: null
+        },
         formTitle: "",
         comboboxes:
         {
@@ -148,7 +186,6 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'ID', value:'id'},
           { text: 'Nombre', value: 'nombre' },
           { text: 'Telefono', value: 'tel' },
           { text: 'Actions', value: 'action', sortable: false },
@@ -178,7 +215,7 @@
     {
       formCalc: function()
       {
-        if(this.formTitle == 'Eliminar producto')
+        if(this.formTitle == 'Eliminar proveedor')
         {
           return true
         }
@@ -230,18 +267,18 @@
       },
       newItem ()
       {
-        this.formTitle = "Nuevo producto"
+        this.formTitle = "Nuevo proveedor"
         this.selectedItem = Object.assign({}, this.defaultItem)
         this.dialog = true  
       },
       editItem (item) {
-        this.formTitle = "Editar producto"
+        this.formTitle = "Editar proveedor"
         this.selectedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        this.formTitle = "Eliminar producto"
+        this.formTitle = "Eliminar proveedor"
         this.selectedItem = Object.assign({}, item)
         this.dialog = true
       },
@@ -256,23 +293,33 @@
       },
 
       save () {
-        if(this.formTitle == "Nuevo producto")
+        if(this.formTitle == "Nuevo proveedor")
         {
           axios.post('/admin/proveedores/nuevo',
                 this.selectedItem).then(response => {
-                  
+                  this.snackbar.color = "rgba(0,255,0,0.5)";
+                  this.snackbar.text = " Proveedor creado correctamente.";
+                  this.snackbar.title="Exito:";
+                  this.snackbar.icon = "done";
+                  this.snackbar.active = true;
+                }).catch(error => {
+                  this.snackbar.color = "rgba(255,0,0,0.5)"
+                  this.snackbar.title = "ERROR:";
+                  this.snackbar.text = "El Proveedor ya existe!"
+                  this.snackbar.icon = "report_problem"
+                  this.snackbar.active = true;
                 });
         }
-        else if(this.formTitle == "Editar producto")
+        else if(this.formTitle == "Editar proveedor")
         {
-          axios.post('/admin/productos/editar',
+          axios.post('/admin/proveedores/editar',
                 this.selectedItem).then(response => {
                   
                 });
         }
-        else if(this.formTitle == "Eliminar producto")
+        else if(this.formTitle == "Eliminar proveedor")
         {
-          axios.post('/admin/productos/eliminar',
+          axios.post('/admin/proveedores/eliminar',
                 {id:this.selectedItem.id}).then(response => {
                     
                 });   

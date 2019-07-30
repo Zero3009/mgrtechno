@@ -35,7 +35,6 @@ class ProductosController extends Controller
                 'tipo' => 'required',
                 'modelo' => 'required',
                 'marca' => 'required',
-                'codbarras' => 'required'
             ]);
             if ($validator->fails()) {
                 return redirect()
@@ -47,7 +46,8 @@ class ProductosController extends Controller
                 $query->tipo = $request->tipo;
                 $query->modelo = $request->modelo;
                 $query->marca = $request->marca;
-                $query->codbarras = $request->codbarras;
+                $query->ean = $request->ean;
+                $query->upc = $request->upc;
                 $query->serializado = $request->serializado;
             $query->save();
             DB::commit();
@@ -66,8 +66,7 @@ class ProductosController extends Controller
         $this->validate($request, [
             'tipo' => 'required',
             'modelo' => 'required',
-            'marca' => 'required',
-            'codbarras' => 'required'
+            'marca' => 'required'
         ]);
 
         $post = $request->all();
@@ -75,8 +74,11 @@ class ProductosController extends Controller
             'tipo' => $post['tipo'],
             'modelo' => $post['modelo'],
             'marca' => $post['marca'],
-            'codbarras' => $post['codbarras']
+            'ean' => $post['ean'],
+            'upc' => $post['upc'],
+            'serializado' => $post['serializado']
         ]);
+        return $post;
         return 'work';
     }
     public function EliminarProducto(Request $request)

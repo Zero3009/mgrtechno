@@ -49,7 +49,10 @@
                   <v-container grid-list-md>
                     <v-layout wrap>
                       <v-flex xs12 sm6 md4>
-                        <v-text-field v-model="selectedItem.codbarras" label="Código de barras"></v-text-field>
+                        <v-text-field v-model="selectedItem.upc" label="Código UPC"></v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm6 md4>
+                        <v-text-field v-model="selectedItem.ean" label="Código EAN"></v-text-field>
                       </v-flex>
                       <v-flex xs12 sm6 md4>
                         <!--<v-text-field v-model="selectedItem.tipo" label="Tipo de producto"></v-text-field>-->
@@ -201,8 +204,8 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'ID', value:'id'},
-          { text: 'Código de barras', value: 'codbarras' },
+          { text: 'Código UPC', value: 'upc' },
+          { text: 'Código EAN', value: 'ean'},
           { text: 'Tipo de producto', value: 'tipo' },
           { text: 'Modelo', value: 'modelo' },
           { text: 'Marca', value: 'marca' },
@@ -219,19 +222,21 @@
           protein: 0,
         },
         defaultItem: {
-          id: 0,
-          codbarras: 0,
-          tipo: "",
-          marca: "",
-          modelo: "",
+          id: null,
+          upc: null,
+          ean: null,
+          tipo: null,
+          marca: null,
+          modelo: null,
           serializado: false
         },
         selectedItem: {
-          id: 0,
-          codbarras: 0,
-          tipo: "",
-          marca: "",
-          modelo: "",
+          id: null,
+          upc: null,
+          ean: null,
+          tipo: null,
+          marca: null,
+          modelo: null,
           serializado: false
         }
       }

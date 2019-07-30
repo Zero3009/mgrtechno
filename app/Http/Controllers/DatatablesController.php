@@ -51,7 +51,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//return $parameters['search'];
-		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.codbarras','prods.serializado'])
+		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.ean','prods.upc','prods.serializado'])
 						->where('estado','=', true);
 		if($parameters['search'] != null)
 		{
@@ -60,10 +60,11 @@ class DatatablesController extends Controller
 								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
 								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
 								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
-								if(is_numeric($filtro))
-								{
-									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
-								}
+								/*if(is_numeric($filtro))
+								{*/
+									$retornar->orWhere('prods.ean','ilike',"%$filtro%");
+									$retornar->orWhere('prods.upc','ilike',"%$filtro%");
+								//}
 						});
 		}
 		if(sizeof($parameters['sortDesc'])> 0 && sizeof($parameters['sortBy'])> 0)
@@ -85,7 +86,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
-		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.codbarras','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor','prods.serializado'])
+		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.ean','prods.upc','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor','prods.serializado'])
 							->join('prods','stock.prods_id','=','prods.id')
 							->join('provs','stock.provs_id','=','provs.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
@@ -107,12 +108,13 @@ class DatatablesController extends Controller
 								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
 								$retornar->orWhere('stock.serial','ilike',"%$filtro%");
 								$retornar->orWhere('stock.fecha_salida','ilike',"%$filtro%");
+								$retornar->orWhere('prods.ean','ilike',"%$filtro%");
+								$retornar->orWhere('prods.upc','ilike',"%$filtro%");
 								$retornar->orWhere('stock.fecha_entrada','ilike',"%$filtro%");
 								if(is_numeric($filtro))
 								{
 									$retornar->orWhere('stock.precio_entrada','ilike',"%$filtro%");
 									$retornar->orWhere('stock.precio_salida','ilike',"%$filtro%");
-									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
 								}
 						});
 		}

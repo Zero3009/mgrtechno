@@ -63,7 +63,7 @@ class StockController extends Controller
                 for($i=0;$i <sizeof($parameters['seriales']);$i++)
                 {
                     $query= new Stock;
-                        $query->prods_id = $parameters['codbarras']['value'];
+                        $query->prods_id = $parameters['codbarras']['id'];
                         $query->provs_id = $parameters['proveedor']['value'];
                         $query->serial = $parameters['seriales'][$i];
                         $query->precio_entrada = $parameters['precio_entrada'];
@@ -77,7 +77,7 @@ class StockController extends Controller
             else
             {
                 $query= new Stock;
-                        $query->prods_id = $parameters['codbarras']['value'];
+                        $query->prods_id = $parameters['codbarras']['id'];
                         $query->provs_id = $parameters['proveedor']['value'];
                         $query->precio_entrada = $parameters['precio_entrada'];
                         $query->fecha_entrada = $parameters['fecha_entrada'];
@@ -118,7 +118,6 @@ class StockController extends Controller
     public function EditStock(Request $request)
     {
         $this->validate($request, [
-            'codbarras' => 'required',
             'fecha_entrada' => 'required',
             'precio_entrada' => 'required',
             'proveedor' => 'required',
@@ -136,7 +135,7 @@ class StockController extends Controller
         }
 
         Stock::find($post['id'])->update([
-            'codbarras' => $post['codbarras']['value'],
+            'prods_id' => $post['codbarras']['id'],
             'fecha_entrada' => $post['fecha_entrada'],
             'precio_entrada' => $post['precio_entrada'],
             'serial' => $post['serial'],
