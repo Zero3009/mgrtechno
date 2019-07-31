@@ -9,7 +9,7 @@ class Clientes extends PrimaryModel
     protected $table = 'clientes';
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
-    protected $fillable = ['nombre', 'apellido','correo','documento','domicilio','tel','estado'];
+    protected $fillable = ['nombre', 'apellido','email','documento','domicilio','tel','estado'];
 
     public function stock()
     {
@@ -25,7 +25,7 @@ class Clientes extends PrimaryModel
 	}
 	public function setCorreoAttribute($value)
 	{	
-    	$this->attributes['correo'] = parent::toLowerOrNull($value);
+    	$this->attributes['email'] = parent::toLowerOrNull($value);
 	}
 	public function setDomicilioAttribute($value)
 	{	

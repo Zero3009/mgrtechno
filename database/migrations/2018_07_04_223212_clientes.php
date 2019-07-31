@@ -17,7 +17,7 @@ class Clientes extends Migration
             $table->increments('id');
             $table->string('nombre')->nullable();
             $table->string('apellido')->nullable();
-            $table->string('correo')->unique()->nullable();
+            $table->string('email')->unique()->nullable();
             $table->integer('documento')->unique()->nullable();
             $table->string('domicilio')->nullable();
             $table->string('tel',80)->nullable();

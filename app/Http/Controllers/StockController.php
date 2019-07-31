@@ -63,6 +63,7 @@ class StockController extends Controller
                 for($i=0;$i <sizeof($parameters['seriales']);$i++)
                 {
                     $query= Stock::create([
+                        'clientes_id' => $parameters['cliente']['id'] ?? null,
                         'prods_id' => $parameters['codbarras']['id'],
                         'provs_id' => $parameters['proveedor']['value'],
                         'serial' => $parameters['seriales'][$i],

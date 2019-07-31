@@ -8,6 +8,8 @@
         </v-radio-group>
       </v-card-title>
       <v-data-table
+        :single-expand="singleExpand"
+        :expanded.sync="expanded"
         :search="search"
         :headers="headers"
         :items="desserts"
@@ -15,15 +17,12 @@
         :server-items-length="totalDesserts"
         :loading="loading"
         class="elevation-1"
+        show-expand
       >
         <template v-slot:top>
           <v-toolbar flat>
           <v-toolbar-title>Productos</v-toolbar-title>
-          <!--<v-divider
-            class="mx-4"
-            inset
-            vertical
-          ></v-divider>-->
+
           <v-spacer></v-spacer>
           
           <v-spacer></v-spacer>
@@ -55,27 +54,6 @@
                       <v-container grid-list-md>
                         <v-layout wrap>
                           <v-flex xs18 sm9 md6>
-                            <!--<v-combobox
-                                v-model="selectedItem.codbarras"
-                                :items="comboboxes.fields.codbarras"
-                                :search-input.sync="comboboxes.searching.codbarras"
-                                hide-selected
-                                hint="Seleccione la marca, si no existe escribala"
-                                label="Código de barras"
-                                persistent-hint
-                                required
-                                :rules="codbarrasRules"
-                              >
-                                <template v-slot:no-data>
-                                  <v-list-item>
-                                    <v-list-item-content>
-                                      <v-list-item-title>
-                                        No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-                                      </v-list-item-title>
-                                    </v-list-item-content>
-                                  </v-list-item>
-                                </template>
-                              </v-combobox>-->
                             <v-autocomplete
                               v-model="selectedItem.codbarras"
                               :items="comboboxes.fields.codbarras"
@@ -87,10 +65,11 @@
                               item-text="modelo"
                               item-value="id"
                               no-filter
-                              label="Código de barras"
-                              placeholder="Start typing to Search"
+                              label="Producto:"
+                              placeholder="Escribir para buscar"
                               prepend-icon="mdi-database-search"
                               return-object
+                              :rules="codbarrasRules"
                             >
                                <template v-slot:item="data">
                                   <v-list-item-content>
@@ -184,7 +163,32 @@
                         <v-flex xs18 sm9 md6>
                           <v-text-field v-model="selectedItem.precio_salida" type="numeric" label="Precio de salida" required></v-text-field>  
                         </v-flex>
-
+                        <v-flex xs18 sm9 md6>
+                            <v-autocomplete
+                              v-model="selectedItem.cliente"
+                              :items="comboboxes.fields.clientes"
+                              :loading="isLoading"
+                              :search-input.sync="searchAutoClientes"
+                              color="white"
+                              hide-no-data
+                              hide-selected
+                              item-text="nombre"
+                              item-value="id"
+                              no-filter
+                              label="Cliente:"
+                              placeholder="Escribir para buscar"
+                              prepend-icon="mdi-database-search"
+                              return-object
+                            >
+                               <template v-slot:item="data">
+                                  <v-list-item-content>
+                                    <v-list-item-title v-html="data.item.nombre + ' '+ data.item.apellido"></v-list-item-title>
+                                    <v-list-item-subtitle v-html="'DNI:' + data.item.documento"></v-list-item-subtitle>
+                                    <v-list-item-subtitle v-html="'Email:' + data.item.email"></v-list-item-subtitle>
+                                  </v-list-item-content>
+                              </template>
+                            </v-autocomplete>
+                            </v-flex>
                         <v-flex xs36 sm18 md12 v-if="serializado == true">
                           <v-combobox
                             v-if="formTitle == 'Nuevo producto'"
@@ -306,6 +310,31 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <template v-slot:expanded-item="{ item }">
+        <td :colspan="headers.length">
+          <v-simple-table
+                  fixed-header
+                  allign="center"
+                >
+                  <tbody>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Documento</th>
+                      <th>Email</th>
+                      <th>Domicilio</th>
+                    </tr>
+                    <tr>
+                      <td>{{item.nombre}}</td>
+                      <td>{{item.apellido}}</td>
+                      <td>{{item.documento}}</td>
+                      <td>{{item.email}}</td>
+                      <td>{{item.domicilio}}</td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+        </td>
+      </template>
     <template v-slot:item.action="{ item }">
       <v-icon
         small
@@ -327,10 +356,7 @@
       >
         delete
       </v-icon>
-    </template><!--
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>-->
+    </template>
       </v-data-table>
     </v-card>
 </template>
@@ -339,17 +365,20 @@
     
     data () {
       return {
+        singleExpand: false,
+        expanded: [],
         descriptionLimit: 60,
         entries: [],
         isLoading: false,
+        isLoadingClientes: false,
         model: null,
         searchAuto: null,
+        searchAutoClientes: null,
         serialesRules: [
           v => !!v || 'Debe ingresar al menos un serial'
         ],
         codbarrasRules: [
-          v => !!v || 'Código de barras requerido',
-          //v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+          v => !!v || 'Producto requerido',
         ],
         precio_entradaRules: [
           v => !!v || 'Precio de entrada requerido'
@@ -376,7 +405,8 @@
             tipos: [],
             marcas: [],
             proveedores: [],
-            seriales: []
+            seriales: [],
+            clientes: []
           },
           searching:{
             codbarras: "",
@@ -417,7 +447,8 @@
           fecha_salida: null,
           precio_entrada: null,
           precio_salida: null,
-          seriales: null
+          seriales: null,
+          cliente: null
         },
         selectedItem: {
           id: 0,
@@ -430,57 +461,13 @@
           fecha_salida: null,
           precio_entrada: null,
           precio_salida: null,
-          seriales: null
+          seriales: null,
+          cliente: null
         }
       }
     },
     computed:
     {
-      /*dataForPost: function()
-      {
-        var post = {}
-        if(this.selectedItem.id != null && this.selectedItem.id != "")
-        {
-          post.id = this.selectedItem.id
-        }
-        if(this.selectedItem.codbarras != null && this.selectedItem.codbarras != "")
-        {
-          post.codbarras = this.selectedItem.codbarras
-        }
-        if(this.selectedItem.tipo != null && this.selectedItem.tipo != "")
-        {
-          this.selectedItem.tipo
-        }
-        if(this.selectedItem.marca != null && this.selectedItem.marca != "")
-        {
-          
-        }
-        if(this.selectedItem.modelo != null && this.selectedItem.modelo != "")
-        {
-          
-        }
-        if(this.selectedItem.proveedor != null && this.selectedItem.proveedor != "")
-        {
-          
-        }
-        if(this.selectedItem.fecha_entrada != null && this.selectedItem.fecha_entrada != "")
-        {
-            
-        }
-        if(this.selectedItem.fecha_salida != null && this.selectedItem.fecha_salida != "")
-        {
-          
-        }
-        if(this.selectedItem.precio_entrada != null && this.selectedItem.precio_salida != "")
-        {
-          
-        }
-        if(this.selectedItem.seriales != null && this.selectedItem.seriales != "")
-        {
-          
-        }
-        return post
-      },*/
       fullTitle: function()
       {
         if(this.selectedItem.codbarras)
@@ -541,15 +528,26 @@
       },
 
       searchAuto (val) {
+        this.isLoading = true
         axios.post('/ajax/codbarras',
           {
             search:val
           }).then(response => {
             this.comboboxes.fields.codbarras = response.data;
+            this.isLoading = false;
         });
       },
-
-
+      searchAutoClientes(val)
+      {
+        this.isLoadingClientes = true
+        axios.post('/ajax/clientes',
+        {
+          search: val
+        }).then(response =>{
+          this.comboboxes.fields.clientes = response.data;
+          this.isLoadingClientes = false;
+        });
+      }
     },
     mounted () {
       this.getDataFromApi()
@@ -575,11 +573,6 @@
           return Object.assign({}, entry, { Description })
         })
       },
-
-
-
-
-
       getDataFromApi () {
         this.loading = true
           const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
@@ -717,11 +710,8 @@
       getProveedores()
       {
           axios.get('/ajax/proveedores')
-              .then(response => {
-                  
+              .then(response => {              
                   this.comboboxes.fields.proveedores = response.data;
-                  //this.$parent.$options.methods.setGlobalProvs(response.data);
-
           });
       },
       getSeriales()
@@ -740,9 +730,7 @@
               this.comboboxes.fields.seriales = a;
             
             });
-      }
-    
+      } 
     },
   }
-
 </script>

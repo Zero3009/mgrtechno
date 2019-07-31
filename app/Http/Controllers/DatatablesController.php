@@ -86,7 +86,7 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
-		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.ean','prods.upc','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor','prods.serializado'])
+		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.ean','prods.upc','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor','prods.serializado','clientes.nombre','clientes.apellido','clientes.id as clienteid','clientes.email','clientes.documento','clientes.domicilio'])
 							->join('prods','stock.prods_id','=','prods.id')
 							->join('provs','stock.provs_id','=','provs.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
@@ -166,7 +166,7 @@ class DatatablesController extends Controller
 	{
 
 		$parameters = $request->all();
-		$retornar = Clientes::select('nombre', 'apellido','correo','documento','domicilio','tel')
+		$retornar = Clientes::select('id','nombre', 'apellido','email','documento','domicilio','tel')
 							->where('estado','=', true);
 		if($parameters['search'] != null)
 		{
@@ -174,7 +174,7 @@ class DatatablesController extends Controller
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
 								$retornar->orWhere('nombre','ilike',"%$filtro%");
 								$retornar->orWhere('apellido','ilike',"%$filtro%");
-								$retornar->orWhere('correo','ilike',"%$filtro%");
+								$retornar->orWhere('email','ilike',"%$filtro%");
 								$retornar->orWhere('domicilio','ilike',"%$filtro%");
 								if(is_numeric($filtro))
 								{
@@ -186,7 +186,7 @@ class DatatablesController extends Controller
 		{
 			if($parameters['sortDesc'][0] == true)
 			{
-				$retornar->orderBy($parameters['sortBy'][0], 'desc');	
+				$retornar->orderBy($parameters['sortBy'][0], 'desc');
 			}
 			else
 			{

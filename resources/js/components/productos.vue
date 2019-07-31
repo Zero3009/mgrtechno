@@ -255,33 +255,6 @@
           }
           
         });
-        
-        /*if(this.selectedItem.id != null && this.selectedItem.id != "")
-        {
-          post.id = this.selectedItem.id
-        }
-        if(this.selectedItem.upc != null && this.selectedItem.upc != "")
-        {
-          post.upc = this.selectedItem.upc
-        }
-        if(this.selectedItem.ean != null && this.selectedItem.ean != "")
-        {
-          post.ean = this.selectedItem.ean
-        }
-        if(this.selectedItem.marca != null && this.selectedItem.marca != "")
-        {
-          post.marca = this.selectedItem.marca
-        }
-        if(this.selectedItem.modelo != null && this.selectedItem.modelo != "")
-        {
-          post.modelo = this.selectedItem.modelo          
-        }
-        if(this.selectedItem.tipo != null && this.selectedItem.tipo != "")
-        {
-            post.tipo = this.selectedItem.tipo
-        }
-        post.serializado = this.selectedItem.serializado
-        */
         return post
       },
       formCalc: function()

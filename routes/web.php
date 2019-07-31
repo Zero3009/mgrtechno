@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function()
 	Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
 	Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProds']);
 	Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
+	Route::post('/ajax/clientes',['uses' => 'AjaxController@getClientes']);
 //FIN AJAX
 
 
@@ -43,6 +44,7 @@ Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController
 Route::get('/admin/proveedores', 'ProveedoresController@Index');
 Route::get('/admin/clientes', 'ClientesController@Index');
 Route::post('/admin/clientes/nuevo', 'ClientesController@NuevoCliente');
+Route::post('/admin/clientes/editar', 'ClientesController@EditarCliente');
 Route::post('/admin/proveedores/nuevo', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::post('/admin/proveedores/editar', ['uses' => 'ProveedoresController@EditarProveedor']);
 Route::post('/admin/proveedores/eliminar', ['uses' => 'ProveedoresController@EliminarProveedor']);

@@ -35,8 +35,8 @@ class ClientesController extends Controller
             $query = new Clientes;
                 $query->nombre = $request->nombre;
                 $query->apellido = $request->apellido;
-                $query->documento = $request->dni;
-                $query->correo = $request->correo;
+                $query->documento = $request->documento;
+                $query->email = $request->email;
                 $query->tel = $request->tel;
                 $query->domicilio = $request->domicilio;
             $query->save();
@@ -50,5 +50,21 @@ class ClientesController extends Controller
                 ->back()
                 ->withErrors('Se ha producido un errro: ( ' . $e->getCode() . ' ): ' . $e->getMessage().' - Copie este texto y envielo a informática');
         }
+    }
+    public function EditarCliente(Request $request)
+    {
+        $this->validate($request, [
+            'nombre' => 'required'
+        ]);
+
+        Clientes::find($request->id)->update([
+            'nombre' => $request->nombre ?? null,
+            'apellido' => $request->apellido ?? null,
+            'documento' => $request->documento ?? null,
+            'email' => $request->email ?? null,
+            'tel' => $request->tel ?? null,
+            'domicilio' => $request->domicilio ?? null
+        ]);
+        return 'work';
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Productos;
 use App\Proveedores;
 use App\Stock;
-
+use App\Clientes;
 use DB;
 use Response;
 
@@ -104,5 +104,28 @@ class AjaxController extends Controller
 				->where('prods.codbarras','=',$request->codbarras)
 				->get();
 		return Response::json($ajax);
+	}
+	public function getClientes(Request $request)
+	{
+		$ajax = Clientes::select('clientes.id','clientes.nombre', 'clientes.apellido', 'clientes.documento','clientes.email')
+				->where('clientes.estado','=',true);
+				if($request->search)
+				{
+		
+					$filtro = $request->search;
+					$ajax = $ajax->where(function ($ajax) use ($filtro) {
+										$ajax->orWhere('clientes.nombre','ilike',"%$filtro%");
+										$ajax->orWhere('clientes.email','ilike',"%$filtro%");
+										//$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+										$ajax->orWhere('clientes.apellido','ilike',"%$filtro%");
+										if(is_numeric($filtro))
+										{
+											$ajax->orWhere('clientes.documento','ilike',"%$filtro%");
+											//$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+										}
+					});
+		
+				}
+		return Response::json($ajax->get());
 	}
 }

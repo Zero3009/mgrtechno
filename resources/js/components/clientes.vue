@@ -44,10 +44,10 @@
                         <v-text-field v-model="selectedItem.apellido" label="Apellido"></v-text-field>
                       </v-flex>
                       <v-flex xs18 sm9 md6>
-                        <v-text-field v-model="selectedItem.correo" label="Correo"></v-text-field>
+                        <v-text-field v-model="selectedItem.email" label="Email"></v-text-field>
                       </v-flex>
                       <v-flex xs18 sm9 md6>
-                        <v-text-field v-model="selectedItem.dni" label="DNI"></v-text-field>
+                        <v-text-field v-model="selectedItem.documento" label="DNI"></v-text-field>
                       </v-flex>
                       <v-flex xs18 sm9 md6>
                         <v-text-field v-model="selectedItem.tel" label="Telefono"></v-text-field>
@@ -155,7 +155,7 @@
           { text: 'DNI', value: 'documento'},
           { text: 'Telefono', value: 'tel' },
           { text: 'Domicilio', value: 'domicilio'},
-          { text: 'Correo', value: 'correo'},
+          { text: 'Email', value: 'email'},
           { text: 'Actions', value: 'action', sortable: false },
         ],
         //EXPERIMENTAL
@@ -173,7 +173,8 @@
           apellido: null,
           domicilio: null,
           tel: null,
-          dni: null,
+          documento: null,
+          correo: null
         },
         selectedItem: {
           id: null,
@@ -181,7 +182,8 @@
           apellido: null,
           domicilio: null,
           tel: null,
-          dni: null,
+          documento: null,
+          email: null
         }
       }
     },
@@ -276,14 +278,14 @@
         }
         else if(this.formTitle == "Editar producto")
         {
-          axios.post('/admin/productos/editar',
+          axios.post('/admin/clientes/editar',
                 this.selectedItem).then(response => {
                   
                 });
         }
         else if(this.formTitle == "Eliminar producto")
         {
-          axios.post('/admin/productos/eliminar',
+          axios.post('/admin/clientes/eliminar',
                 {id:this.selectedItem.id}).then(response => {
                     
                 });   
