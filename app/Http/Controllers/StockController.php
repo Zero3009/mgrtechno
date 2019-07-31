@@ -136,6 +136,7 @@ class StockController extends Controller
         }
 
         Stock::find($post['id'])->update([
+            'clientes_id' => $post['cliente']['id'] ?? null,
             'prods_id' => $post['codbarras']['id'],
             'fecha_entrada' => $post['fecha_entrada'],
             'precio_entrada' => $post['precio_entrada'],
