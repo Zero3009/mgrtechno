@@ -30,7 +30,7 @@ class ProductosController extends Controller
         $parameters = $request->all();
         //return $parameters;
         //return $request->tipo['label'];
-    	DB::beginTransaction();
+    	//DB::beginTransaction();
     	try 
         {
             $validator = Validator::make($request->all(), [
@@ -44,28 +44,14 @@ class ProductosController extends Controller
                             ->withErrors($validator)
                             ->withInput();
             }
-            $query = new Productos;//::create([
-                /*'tipo' => $request->tipo ?? null,
-                'modelo' => $request->modelo ?? null,
-                'marca' => $request->marca ?? null,
-                'ean' => $request->ean,
-                'upc' => $request->upc,
+            $query = Productos::create([
+                'modelo' => $request->modelo,
+                'marca' => $request->marca,
+                'tipo' => $request->tipo,
+                'ean' => $request->ean ?? null,
+                'upc' => $request->upc ?? null,
                 'serializado' => $request->serializado
-            ]);*/
-                $query->tipo = $request->tipo;
-                $query->modelo = $request->modelo;
-                $query->marca = $request->marca;
-                if($request->ean != null || $request->ean != "")
-                {
-                    $query->ean = $request->ean;    
-                }
-                if($request->upc != null || $request->upc != "")
-                {
-                    $query->upc = $request->upc;    
-                }
-                $query->serializado = $request->serializado;
-            $query->save();
-            DB::commit();
+            ]);
             return 'work';
         }
         catch(Exception $e)
@@ -89,8 +75,8 @@ class ProductosController extends Controller
             'tipo' => $post['tipo'],
             'modelo' => $post['modelo'],
             'marca' => $post['marca'],
-            'ean' => $post['ean'],
-            'upc' => $post['upc'],
+            'ean' => $post['ean'] ?? null,
+            'upc' => $post['upc'] ?? null,
             'serializado' => $post['serializado']
         ]);
         return $post;
@@ -98,7 +84,6 @@ class ProductosController extends Controller
     }
     public function EliminarProducto(Request $request)
     {
-        //return $request;
         $this->validate($request, [
             'id' => 'required|integer',
         ]);
@@ -106,6 +91,5 @@ class ProductosController extends Controller
         $queryinfo = Productos::find($request['id']);
             $queryinfo->estado = false;
         $queryinfo->save();
-        //return 'work';
     }
 }

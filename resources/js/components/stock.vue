@@ -42,7 +42,7 @@
             <v-card  v-if="formCalc == false">
               <v-card-title>
                 <span class="headline">{{ fullTitle }}</span>
-                <!--<v-progress-linear
+                <!--  <v-progress-linear
                   v-model="valueDeterminate"
                   color="yellow accent-4"
                 ></v-progress-linear>-->
@@ -436,6 +436,51 @@
     },
     computed:
     {
+      /*dataForPost: function()
+      {
+        var post = {}
+        if(this.selectedItem.id != null && this.selectedItem.id != "")
+        {
+          post.id = this.selectedItem.id
+        }
+        if(this.selectedItem.codbarras != null && this.selectedItem.codbarras != "")
+        {
+          post.codbarras = this.selectedItem.codbarras
+        }
+        if(this.selectedItem.tipo != null && this.selectedItem.tipo != "")
+        {
+          this.selectedItem.tipo
+        }
+        if(this.selectedItem.marca != null && this.selectedItem.marca != "")
+        {
+          
+        }
+        if(this.selectedItem.modelo != null && this.selectedItem.modelo != "")
+        {
+          
+        }
+        if(this.selectedItem.proveedor != null && this.selectedItem.proveedor != "")
+        {
+          
+        }
+        if(this.selectedItem.fecha_entrada != null && this.selectedItem.fecha_entrada != "")
+        {
+            
+        }
+        if(this.selectedItem.fecha_salida != null && this.selectedItem.fecha_salida != "")
+        {
+          
+        }
+        if(this.selectedItem.precio_entrada != null && this.selectedItem.precio_salida != "")
+        {
+          
+        }
+        if(this.selectedItem.seriales != null && this.selectedItem.seriales != "")
+        {
+          
+        }
+        return post
+      },*/
       fullTitle: function()
       {
         if(this.selectedItem.codbarras)

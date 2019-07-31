@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\PrimaryModel;
 
-class Stock extends Model
+class Stock extends PrimaryModel
 {
     protected $table = 'stock';
 	protected $primaryKey = 'id';
@@ -13,7 +13,7 @@ class Stock extends Model
 
     public function setSerialAttribute($value)
 	{
-	    $this->attributes['serial'] = strtoupper($value);
+	    $this->attributes['serial'] = parent::toUpperOrNull($value);
 	}
 
 	public function cliente()

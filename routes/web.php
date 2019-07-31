@@ -43,7 +43,6 @@ Route::get('/datatables/getproductoseliminados',['uses' => 'DatatablesController
 Route::get('/admin/proveedores', 'ProveedoresController@Index');
 Route::get('/admin/clientes', 'ClientesController@Index');
 Route::post('/admin/clientes/nuevo', 'ClientesController@NuevoCliente');
-Route::post('/admin/proveedores/nuevo/post', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::post('/admin/proveedores/nuevo', ['uses' => 'ProveedoresController@NuevoProveedor']);
 Route::post('/admin/proveedores/editar', ['uses' => 'ProveedoresController@EditarProveedor']);
 Route::post('/admin/proveedores/eliminar', ['uses' => 'ProveedoresController@EliminarProveedor']);

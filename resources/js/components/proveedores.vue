@@ -191,28 +191,33 @@
           { text: 'Actions', value: 'action', sortable: false },
         ],
         //EXPERIMENTAL
-        editedIndex: -1,
-        editedItem: {
-          name: '',
-          calories: 0,
-          fat: 0,
-          carbs: 0,
-          protein: 0,
-        },
         defaultItem: {
-          id: 0,
-          nombre: "",
-          tel: ""
+          id: null,
+          nombre: null,
+          tel: null
         },
         selectedItem: {
           id: 0,
-          nombre: "",
-          tel: ""
+          nombre: null,
+          tel: null
         }
       }
     },
     computed:
     {
+      dataForPost: function()
+      {
+        var post = {}
+        Object.entries(this.selectedItem).forEach(function(value,key)
+        {
+          if(value[1] != null && value[1] != "")
+          {
+            post[value[0]] = value[1]  
+          }
+          
+        });
+        return post
+      },
       formCalc: function()
       {
         if(this.formTitle == 'Eliminar proveedor')
@@ -296,7 +301,7 @@
         if(this.formTitle == "Nuevo proveedor")
         {
           axios.post('/admin/proveedores/nuevo',
-                this.selectedItem).then(response => {
+                this.dataForPost).then(response => {
                   this.snackbar.color = "rgba(0,255,0,0.5)";
                   this.snackbar.text = " Proveedor creado correctamente.";
                   this.snackbar.title="Exito:";

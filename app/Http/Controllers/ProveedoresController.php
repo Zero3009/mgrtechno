@@ -47,13 +47,11 @@ class ProveedoresController extends Controller
         return Redirect::to('/admin/proveedores')->with('status', 'Se ha editado correctamente la etiqueta.');
     }
     public function NuevoProveedor(Request $request){
-    	DB::beginTransaction();
     	try 
         {
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
             ]);
-            $parameters = $request->all();
             if ($validator->fails()) {
                 return redirect()
                             ->back()
@@ -61,11 +59,9 @@ class ProveedoresController extends Controller
                             ->withInput();
             }
             $query = Proveedores::create([
-                'nombre' => $parameters['nombre'],
-                'tel' => $parameters['tel'] ?? null
+                'nombre' => $request->nombre,
+                'tel' => null
             ]);
-
-            DB::commit();
             return 'work';
         }
         catch(\Illuminate\Database\QueryException $e)

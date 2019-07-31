@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\PrimaryModel;
 
-class Clientes extends Model
+class Clientes extends PrimaryModel
 {
     protected $table = 'clientes';
 	protected $primaryKey = 'id';
@@ -17,22 +17,22 @@ class Clientes extends Model
     }
     public function setNombreAttribute($value)
 	{
-	    $this->attributes['nombre'] = strtoupper($value);
+	    $this->attributes['nombre'] = parent::toUpperOrNull($value);
 	}
 	public function setApellidoAttribute($value)
 	{	
-    	$this->attributes['apellido'] = strtoupper($value);
+    	$this->attributes['apellido'] = parent::toUpperOrNull($value);
 	}
 	public function setCorreoAttribute($value)
 	{	
-    	$this->attributes['correo'] = strtolower($value);
+    	$this->attributes['correo'] = parent::toLowerOrNull($value);
 	}
 	public function setDomicilioAttribute($value)
 	{	
-    	$this->attributes['domicilio'] = strtoupper($value);
+    	$this->attributes['domicilio'] = parent::toUpperOrNull($value);
 	}
 	public function setTelAttribute($value)
 	{	
-    	$this->attributes['tel'] = strtoupper($value);
+    	$this->attributes['tel'] = parent::toUpperOrNull($value);
 	}
 }
