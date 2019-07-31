@@ -17,8 +17,8 @@ class Prods extends Migration
             $table->string('tipo');
             $table->string('marca');
             $table->string('modelo');
-            $table->string('upc', 80)->unique()->nullable();
-            $table->string('ean', 80)->unique()->nullable();
+            $table->string('upc', 80)->unique()->nullable()->default(null);
+            $table->string('ean', 80)->unique()->nullable()->default(null);
             $table->boolean('serializado')->default(true);
             $table->boolean('estado')->default(true);
             $table->timestamps();

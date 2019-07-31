@@ -1,11 +1,7 @@
 {
     "/js/clientes.js": "/js/clientes.js",
-    "/js/clientes.js.map": "/js/clientes.js.map",
     "/js/productos.js": "/js/productos.js",
-    "/js/productos.js.map": "/js/productos.js.map",
     "/js/proveedores.js": "/js/proveedores.js",
-    "/js/proveedores.js.map": "/js/proveedores.js.map",
     "/js/stock.js": "/js/stock.js",
-    "/css/app.css": "/css/app.css",
-    "/js/stock.js.map": "/js/stock.js.map"
+    "/css/app.css": "/css/app.css"
 }

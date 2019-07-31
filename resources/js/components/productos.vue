@@ -48,6 +48,7 @@
                 <v-card-text>
                   <v-container grid-list-md>
                     <v-layout wrap>
+                      {{selectedItem}}
                       <v-flex xs12 sm6 md4>
                         <v-text-field v-model="selectedItem.upc" label="Código UPC"></v-text-field>
                       </v-flex>

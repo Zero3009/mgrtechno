@@ -28,6 +28,7 @@ class ProductosController extends Controller
     public function NuevoProducto(Request $request)
     {
         $parameters = $request->all();
+        //return $parameters;
         //return $request->tipo['label'];
     	DB::beginTransaction();
     	try 
@@ -43,27 +44,27 @@ class ProductosController extends Controller
                             ->withErrors($validator)
                             ->withInput();
             }
-            $query = Productos::create([
-                'tipo' => $parameters['tipo'] ?? null,
-                'modelo' => $parameters['modelo'] ?? null,
-                'marca' => $parameters['marca'] ?? null,
-                'ean' => $parameters['ean'] ?? null,
-                'upc' => $parameters['upc'] ?? null,
-                'serializado' => $parameters['serializado']
-            ]);
-                /*$query->tipo = $request->tipo;
+            $query = new Productos;//::create([
+                /*'tipo' => $request->tipo ?? null,
+                'modelo' => $request->modelo ?? null,
+                'marca' => $request->marca ?? null,
+                'ean' => $request->ean,
+                'upc' => $request->upc,
+                'serializado' => $request->serializado
+            ]);*/
+                $query->tipo = $request->tipo;
                 $query->modelo = $request->modelo;
                 $query->marca = $request->marca;
-                if($request->ean != null)
+                if($request->ean != null || $request->ean != "")
                 {
                     $query->ean = $request->ean;    
                 }
-                if($request->upc != null)
+                if($request->upc != null || $request->upc != "")
                 {
                     $query->upc = $request->upc;    
                 }
                 $query->serializado = $request->serializado;
-            $query->save();*/
+            $query->save();
             DB::commit();
             return 'work';
         }
