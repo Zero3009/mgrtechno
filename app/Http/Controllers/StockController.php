@@ -62,29 +62,29 @@ class StockController extends Controller
             {
                 for($i=0;$i <sizeof($parameters['seriales']);$i++)
                 {
-                    $query= new Stock;
-                        $query->prods_id = $parameters['codbarras']['id'];
-                        $query->provs_id = $parameters['proveedor']['value'];
-                        $query->serial = $parameters['seriales'][$i];
-                        $query->precio_entrada = $parameters['precio_entrada'];
-                        $query->fecha_entrada = $parameters['fecha_entrada'];
-                        $query->disponible = $disp;
-                        $query->fecha_salida = $parameters['fecha_salida'] ?? null;
-                        $query->precio_salida = $parameters['precio_salida'] ?? null;
-                    $query->save();
+                    $query= Stock::create([
+                        'prods_id' => $parameters['codbarras']['id'],
+                        'provs_id' => $parameters['proveedor']['value'],
+                        'serial' => $parameters['seriales'][$i],
+                        'precio_entrada' => $parameters['precio_entrada'] ?? null,
+                        'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
+                        'disponible' => $disp,
+                        'fecha_salida' => $parameters['fecha_salida'] ?? null,
+                        'precio_salida' => $parameters['precio_salida'] ?? null
+                    ]);
                 }
             }
             else
             {
-                $query= new Stock;
-                        $query->prods_id = $parameters['codbarras']['id'];
-                        $query->provs_id = $parameters['proveedor']['value'];
-                        $query->precio_entrada = $parameters['precio_entrada'];
-                        $query->fecha_entrada = $parameters['fecha_entrada'];
-                        $query->disponible = $disp;
-                        $query->fecha_salida = $parameters['fecha_salida'] ?? null;
-                        $query->precio_salida = $parameters['precio_salida'] ?? null;
-                $query->save();    
+                $query= Stock::create([
+                    'prods_id' => $parameters['codbarras']['id'],
+                    'provs_id' => $parameters['proveedor']['value'],
+                    'precio_entrada' => $parameters['precio_entrada'] ?? null,
+                    'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
+                    'disponible' => $disp,
+                    'fecha_salida' => $parameters['fecha_salida'] ?? null,
+                    'precio_salida' => $parameters['precio_salida'] ?? null
+                ]);
             }    
                 
             DB::commit();

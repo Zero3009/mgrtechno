@@ -53,16 +53,18 @@ class ProveedoresController extends Controller
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
             ]);
+            $parameters = $request->all();
             if ($validator->fails()) {
                 return redirect()
                             ->back()
                             ->withErrors($validator)
                             ->withInput();
             }
-            $query = new Proveedores;
-                $query->nombre = $request->nombre;
-                $query->tel = $request->tel;
-            $query->save();
+            $query = Proveedores::create([
+                'nombre' => $parameters['nombre'],
+                'tel' => $parameters['tel'] ?? null
+            ]);
+
             DB::commit();
             return 'work';
         }

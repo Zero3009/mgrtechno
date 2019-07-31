@@ -27,6 +27,7 @@ class ProductosController extends Controller
     }
     public function NuevoProducto(Request $request)
     {
+        $parameters = $request->all();
         //return $request->tipo['label'];
     	DB::beginTransaction();
     	try 
@@ -42,14 +43,27 @@ class ProductosController extends Controller
                             ->withErrors($validator)
                             ->withInput();
             }
-            $query = new Productos;
-                $query->tipo = $request->tipo;
+            $query = Productos::create([
+                'tipo' => $parameters['tipo'] ?? null,
+                'modelo' => $parameters['modelo'] ?? null,
+                'marca' => $parameters['marca'] ?? null,
+                'ean' => $parameters['ean'] ?? null,
+                'upc' => $parameters['upc'] ?? null,
+                'serializado' => $parameters['serializado']
+            ]);
+                /*$query->tipo = $request->tipo;
                 $query->modelo = $request->modelo;
                 $query->marca = $request->marca;
-                $query->ean = $request->ean;
-                $query->upc = $request->upc;
+                if($request->ean != null)
+                {
+                    $query->ean = $request->ean;    
+                }
+                if($request->upc != null)
+                {
+                    $query->upc = $request->upc;    
+                }
                 $query->serializado = $request->serializado;
-            $query->save();
+            $query->save();*/
             DB::commit();
             return 'work';
         }
