@@ -39,7 +39,7 @@ class AjaxController extends Controller
 		
 					$filtro = $parameters['search'];
 					$ajax = $ajax->where(function ($ajax) use ($filtro) {
-										
+										$ajax->orWhere('prods.modelo','ilike',"%$filtro%");
 										//$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
 										if(is_numeric($filtro))
 										{
