@@ -74,8 +74,8 @@
                                <template v-slot:item="data">
                                   <v-list-item-content>
                                     <v-list-item-title v-html="data.item.modelo"></v-list-item-title>
-                                    <v-list-item-subtitle v-html="'EAN:' + data.item.ean"></v-list-item-subtitle>
-                                    <v-list-item-subtitle v-html="'UPC:' + data.item.upc"></v-list-item-subtitle>
+                                    <v-list-item-subtitle v-if="data.item.ean" v-html="'EAN:' + data.item.ean"></v-list-item-subtitle>
+                                    <v-list-item-subtitle v-if="data.item.upc" v-html="'UPC:' + data.item.upc"></v-list-item-subtitle>
                                   </v-list-item-content>
                               </template>
                             </v-autocomplete>
@@ -88,6 +88,7 @@
                                 hide-selected
                                 hint="Seleccione la marca, si no existe escribala"
                                 label="Proveedor"
+                                no-filter
                                 persistent-hint
                                 :rules="proveedorRules"
                               >
@@ -301,6 +302,9 @@
                   </tbody>
                 </v-simple-table>
               </v-card-text>
+              <template>
+                <v-spacer></v-spacer>
+              </template>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
@@ -409,11 +413,16 @@
             clientes: []
           },
           searching:{
-            codbarras: "",
-            tipo: "",
-            marca: "",
-            proveedor: "",
-            seriales: ""
+            codbarras: null,
+            tipo: null,
+            marca: null,
+            proveedor: null,
+            seriales: null
+          },
+          loading:
+          {
+            proveedores: false,
+            clientes: false
           }
         },
         dialog: false,
@@ -526,7 +535,6 @@
       dialog (val) {
         val || this.close()
       },
-
       searchAuto (val) {
         this.isLoading = true
         axios.post('/ajax/codbarras',
@@ -539,7 +547,7 @@
       },
       searchAutoClientes(val)
       {
-        this.isLoadingClientes = true
+        this.comboboxes.loading.clientes = true
         axios.post('/ajax/clientes',
         {
           search: val
@@ -547,6 +555,17 @@
           this.comboboxes.fields.clientes = response.data;
           this.isLoadingClientes = false;
         });
+      },
+      'comboboxes.searching.proveedor'(val)
+      {
+        this.comboboxes.loading.proveedores = true
+        axios.post('/ajax/proveedores',
+              {
+                search: val  
+              }).then(response => {
+                this.comboboxes.fields.proveedores = response.data;
+                this.comboboxes.loading.proveedores = false
+              });
       }
     },
     mounted () {
@@ -687,17 +706,17 @@
         this.close()
       },
       //CARGAR COMBOBOX
-      cargarSelects: function()
-      {
-        this.getTiposProductos();
-        this.getMarcas();
+      //cargarSelects: function()
+      //{
+        //this.getTiposProductos();
+        //this.getMarcas();
         //this.getCodbarras();
-        this.getProveedores();
-        this.getSeriales();
-      },
+        //this.getProveedores();
+        //this.getSeriales();
+      //},
       getTiposProductos: function()
       {
-          axios.get('/ajax/tiposprods')
+          axios.post('/ajax/tiposprods')
             .then(response => {
               this.comboboxes.fields.tipos = response.data;
           });

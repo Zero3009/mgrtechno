@@ -48,7 +48,6 @@
                 <v-card-text>
                   <v-container grid-list-md>
                     <v-layout wrap>
-                      {{selectedItem}}
                       <v-flex xs12 sm6 md4>
                         <v-text-field v-model="selectedItem.upc" label="Código UPC"></v-text-field>
                       </v-flex>
@@ -65,6 +64,8 @@
                           hint="Seleccione la marca, si no existe escribala"
                           label="Tipo de producto"
                           small-chips
+                          :loading="comboboxes.loading.tipo"
+                          no-filter
                           persistent-hint
                         >
                           <template v-slot:no-data>
@@ -86,6 +87,7 @@
                           hide-selected
                           hint="Seleccione el tipo de producto, si no existe escribalo"
                           label="Marca"
+                          no-filter
                           persistent-hint
                         >
                           <template v-slot:no-data>
@@ -194,8 +196,13 @@
             marcas: []  
           },
           searching:{
-            tipo: "",
-            marca: ""
+            tipo: null,
+            marca: null
+          },
+          loading:
+          {
+            tipo: false,
+            marca: false
           }
         },
         dialog: false,
@@ -286,10 +293,30 @@
       dialog (val) {
         val || this.close()
       },
+      'comboboxes.searching.tipo' (val) {
+        this.comboboxes.loading.tipo = true
+        axios.post('/ajax/tiposprods',
+          {
+            search:val
+          }).then(response => {
+            this.comboboxes.fields.tipos = response.data;
+            this.comboboxes.loading.tipo = false;
+        });
+      },
+      'comboboxes.searching.marca' (val) {
+        this.comboboxes.loading.marca = true
+        axios.post('/ajax/marcas',
+          {
+            search:val  
+          }).then(response => {
+            this.comboboxes.fields.marcas = response.data;
+            this.comboboxes.loading.marca = false
+          });
+      }
     },
     mounted () {
       this.getDataFromApi()
-      this.cargarSelects()
+      //this.cargarSelects()
     },
     methods: {
       getColor(item)
@@ -386,27 +413,22 @@
                 });   
         }
         this.close()
-      },
+      }
       //CARGAR COMBOBOX
-      cargarSelects: function()
-      {
-        this.getTiposProductos();
-        this.getMarcas();
-      },
-      getTiposProductos: function()
+      /*getTiposProductos: function()
       {
           axios.get('/ajax/tiposprods')
             .then(response => {
               this.comboboxes.fields.tipos = response.data;
           });
-      },
-      getMarcas: function()
+      },*/
+      /*getMarcas: function()
       {
         axios.get('/ajax/marcas')
           .then(response => {
             this.comboboxes.fields.marcas = response.data;    
         });
-      },
+      },*/
     
     },
   }

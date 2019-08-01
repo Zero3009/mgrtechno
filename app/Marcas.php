@@ -15,4 +15,8 @@ class Marcas extends PrimaryModel
 	{
 	    $this->attributes['nombre'] = parent::toUpperOrNull($value);
 	}
+	public function productos()
+    {
+        return $this->hasMany('App\Productos');
+    }
 }

@@ -33,4 +33,12 @@ class Productos extends PrimaryModel
 	{	
 		$this->attributes['ean'] = parent::toUpperOrNull($value);	
 	}
+    public function marcas()
+    {
+        return $this->belongsTo('App\Marcas');
+    }
+    public function tiposdeproductos()
+    {
+        return $this->belongsTo('App\TiposDeProductos');
+    }
 }

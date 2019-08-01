@@ -23,8 +23,10 @@ class AjaxController extends Controller
 	}
 	public function getMarcas(Request $request)
 	{
+		$filtro = $request->search;
 		$ajax = Marcas::select('marcas.nombre as text','marcas.id')
 						->where('marcas.estado','=',true)
+						->where('marcas.nombre','ilike',"%$filtro%")
 						->get();
 		
 		return Response::json($ajax);
@@ -53,9 +55,11 @@ class AjaxController extends Controller
 				}
 		return Response::json($ajax->get());
 	}
-	public function getProveedores(){
+	public function getProveedores(Request $request){
+		$filtro = $request->search;
 		$ajax = Proveedores::select('proveedores.nombre as text','proveedores.id as value')
 								->where('proveedores.estado','=', true)
+								->where('proveedores.nombre','ilike', "%$filtro%")
 								->get();
 		return Response::json($ajax);	
 	}
@@ -91,9 +95,13 @@ class AjaxController extends Controller
 					->get();
 		return Response::json($ajax);
 	}
-	public function getTiposProductos()
+	public function getTiposProductos(Request $request)
 	{
-		$ajax = TiposDeProductos::select('tipos_de_productos.nombre as text','tipos_de_productos.id')->get();
+
+		$filtro = $request->search;
+		$ajax = TiposDeProductos::select('tipos_de_productos.nombre as text','tipos_de_productos.id')
+								->where('tipos_de_productos.nombre','ilike',"%$filtro%")
+								->get();
 			//>pluck('value');
 
 		return Response::json($ajax);

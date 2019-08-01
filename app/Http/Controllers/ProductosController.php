@@ -29,7 +29,6 @@ class ProductosController extends Controller
     }
     public function NuevoProducto(Request $request)
     {
-        $parameters = $request->all();
         if(is_string($request->marca))
         {
             $marca = Marcas::create([

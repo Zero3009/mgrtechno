@@ -18,13 +18,13 @@ Route::middleware(['auth'])->group(function()
 {
 	Route::get('/admin/inicio', ['uses' => 'InicioController@Index']);
 	Route::get('/ajax/productos', ['uses' => 'AjaxController@getProductos']);
-	Route::get('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
+	Route::post('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
 	Route::post('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
-	Route::get('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
+	Route::post('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
 	Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
 	Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
 	Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
-	Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProductos']);
+	Route::post('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProductos']);
 	Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
 	Route::post('/ajax/clientes',['uses' => 'AjaxController@getClientes']);
 //FIN AJAX
