@@ -570,7 +570,6 @@
     },
     mounted () {
       this.getDataFromApi()
-      this.cargarSelects()
     },
     methods: {
       fields () {
