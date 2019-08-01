@@ -423,9 +423,9 @@
         loading: true,
         options: {},
         headers: [
-          { text: 'Código UPC', value: 'upc' },
-          { text: 'Código EAN', value: 'ean'},
-          { text: 'Tipo de producto', value: 'tipo' },
+          //{ text: 'Código UPC', value: 'upc' },
+          //{ text: 'Código EAN', value: 'ean'},
+          //{ text: 'Tipo de producto', value: 'tipo' },
           { text: 'Modelo', value: 'modelo' },
           { text: 'Marca', value: 'marca' },
           { text: 'Serial', value: 'serial'},
@@ -607,21 +607,30 @@
         {
           this.searchAuto = item.ean;
         }
+        this.searchAutoClientes = item.nombre;
         this.selectedItem = Object.assign({}, {
           id: item.id,
           codbarras: {
-            id: item.prods_id,
+            id: item.productos_id,
             upc: item.upc,
             ean: item.ean,
             modelo: item.modelo,
-            serializado: item.serializado,
+            serializado: item.serializado
           },
           tipo: item.tipo,
           marca: item.marca,
           modelo: item.modelo,
           proveedor: {
-            value: item.provs_id,
+            value: item.proveedores_id,
             text: item.proveedor
+          },
+          cliente: {
+            nombre: item.nombre,
+            apellido: item.apellido,
+            id: item.clienteid,
+            documento: item.documento,
+            domicilio: item.domicilio,
+            correo: item.correo
           },
           fecha_entrada: item.fecha_entrada,
           fecha_salida: item.fecha_salida,

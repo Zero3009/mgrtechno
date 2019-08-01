@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Productos;
+use App\TiposDeProductos;
+use App\Marcas;
 use DB;
 use Redirect;
 use View;
@@ -28,9 +30,20 @@ class ProductosController extends Controller
     public function NuevoProducto(Request $request)
     {
         $parameters = $request->all();
-        //return $parameters;
-        //return $request->tipo['label'];
-    	//DB::beginTransaction();
+        if(is_string($request->marca))
+        {
+            $marca = Marcas::create([
+                'nombre' => $request->marca,
+            ]);
+            $request->marca = Marcas::where('nombre','ilike',$request->marca)->first();
+        }
+        if(is_string($request->tipo))
+        {
+            $tipo = TiposDeProductos::create([
+                'nombre' => $request->tipo
+            ]);
+            $request->tipo = TiposDeProductos::where('nombre','ilike',$request->tipo)->first();
+        }
     	try 
         {
             $validator = Validator::make($request->all(), [
@@ -46,8 +59,8 @@ class ProductosController extends Controller
             }
             $query = Productos::create([
                 'modelo' => $request->modelo,
-                'marca' => $request->marca,
-                'tipo' => $request->tipo,
+                'marcas_id' => $request->marca['id'],
+                'tipos_id' => $request->tipo['id'] ,
                 'ean' => $request->ean ?? null,
                 'upc' => $request->upc ?? null,
                 'serializado' => $request->serializado
@@ -69,17 +82,28 @@ class ProductosController extends Controller
             'modelo' => 'required',
             'marca' => 'required'
         ]);
-
-        $post = $request->all();
-        Productos::find($post['id'])->update([
-            'tipo' => $post['tipo'],
-            'modelo' => $post['modelo'],
-            'marca' => $post['marca'],
-            'ean' => $post['ean'] ?? null,
-            'upc' => $post['upc'] ?? null,
-            'serializado' => $post['serializado']
+        if(is_string($request->marca))
+        {
+            $marca = Marcas::create([
+                'nombre' => $request->marca,
+            ]);
+            $request->marca = Marcas::where('nombre','ilike',$request->marca)->first();
+        }
+        if(is_string($request->tipo))
+        {
+            $tipo = TiposDeProductos::create([
+                'nombre' => $request->tipo
+            ]);
+            $request->tipo = TiposDeProductos::where('nombre','ilike',$request->tipo)->first();
+        }
+        Productos::find($request->id)->update([
+            'tipos_id' => $request->tipo['id'],
+            'modelo' => $request->modelo,
+            'marcas_id' => $request->marca['id'],
+            'ean' => $request->ean ?? null,
+            'upc' => $request->upc ?? null,
+            'serializado' => $request->serializado
         ]);
-        return $post;
         return 'work';
     }
     public function EliminarProducto(Request $request)

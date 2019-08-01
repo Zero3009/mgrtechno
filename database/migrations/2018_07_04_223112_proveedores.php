@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Provs extends Migration
+class Proveedores extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class Provs extends Migration
      */
     public function up()
     {
-        Schema::create('provs', function(Blueprint $table) {
+        Schema::create('proveedores', function(Blueprint $table) {
             $table->increments('id');
             $table->string('nombre', 80)->unique();
             $table->string('tel', 60)->nullable()->default(null);
@@ -28,6 +28,6 @@ class Provs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('provs');
+        Schema::dropIfExists('proveedores');
     }
 }

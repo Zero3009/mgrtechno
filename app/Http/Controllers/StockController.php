@@ -64,8 +64,8 @@ class StockController extends Controller
                 {
                     $query= Stock::create([
                         'clientes_id' => $parameters['cliente']['id'] ?? null,
-                        'prods_id' => $parameters['codbarras']['id'],
-                        'provs_id' => $parameters['proveedor']['value'],
+                        'productos_id' => $parameters['codbarras']['id'],
+                        'proveedores_id' => $parameters['proveedor']['value'],
                         'serial' => $parameters['seriales'][$i],
                         'precio_entrada' => $parameters['precio_entrada'] ?? null,
                         'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
@@ -78,8 +78,8 @@ class StockController extends Controller
             else
             {
                 $query= Stock::create([
-                    'prods_id' => $parameters['codbarras']['id'],
-                    'provs_id' => $parameters['proveedor']['value'],
+                    'productos_id' => $parameters['codbarras']['id'],
+                    'proveedores_id' => $parameters['proveedor']['value'],
                     'precio_entrada' => $parameters['precio_entrada'] ?? null,
                     'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
                     'disponible' => $disp,
@@ -137,11 +137,11 @@ class StockController extends Controller
 
         Stock::find($post['id'])->update([
             'clientes_id' => $post['cliente']['id'] ?? null,
-            'prods_id' => $post['codbarras']['id'],
+            'productos_id' => $post['codbarras']['id'],
             'fecha_entrada' => $post['fecha_entrada'],
             'precio_entrada' => $post['precio_entrada'],
             'serial' => $post['serial'],
-            'provs_id' => $post['proveedor']['value'],
+            'proveedores_id' => $post['proveedor']['value'],
             'disponible' => $disp,
             'fecha_salida' => $post['fecha_salida'] ?? null,
             'precio_salida' => $post['precio_salida'] ?? null 

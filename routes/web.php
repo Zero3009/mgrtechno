@@ -24,7 +24,7 @@ Route::middleware(['auth'])->group(function()
 	Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
 	Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
 	Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
-	Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProds']);
+	Route::get('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProductos']);
 	Route::post('/ajax/check/codbarras',['uses' => 'AjaxController@checkCodbarras']);
 	Route::post('/ajax/clientes',['uses' => 'AjaxController@getClientes']);
 //FIN AJAX

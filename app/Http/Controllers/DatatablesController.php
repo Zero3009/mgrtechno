@@ -19,17 +19,17 @@ class DatatablesController extends Controller
 	public function GetProveedores(Request $request)
 	{
 		$parameters = $request->all();
-		$retornar = Proveedores::select(['provs.id', 'provs.nombre', 'provs.tel'])
+		$retornar = Proveedores::select(['proveedores.id', 'proveedores.nombre', 'proveedores.tel'])
 						->where('estado','=', true);
 		if($parameters['search'] != null)
 		{
 			$filtro = $parameters['search'];
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
-								$retornar->orWhere('provs.tel','ilike',"%$filtro%");
-								$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+								$retornar->orWhere('proveedores.tel','ilike',"%$filtro%");
+								$retornar->orWhere('proveedores.nombre','ilike',"%$filtro%");
 								/*if(is_numeric($filtro))
 								{
-									$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+									$retornar->orWhere('productos.codbarras','ilike',"%$filtro%");
 								}*/
 						});
 		}
@@ -51,19 +51,21 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//return $parameters['search'];
-		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca','prods.modelo','prods.ean','prods.upc','prods.serializado'])
-						->where('estado','=', true);
+		$retornar = Productos::select(['productos.id', 'tipos_de_productos.nombre as tipo','marcas.nombre as marca','productos.modelo','productos.ean','productos.upc','productos.serializado'])
+					->join('marcas','productos.marcas_id','=','marcas.id')
+					->join('tipos_de_productos','tipos_de_productos.id','=','productos.tipos_id')
+						->where('productos.estado','=', true);
 		if($parameters['search'] != null)
 		{
 			$filtro = $parameters['search'];
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
-								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
-								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
-								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
+								$retornar->orWhere('tipo','ilike',"%$filtro%");
+								$retornar->orWhere('marca','ilike',"%$filtro%");
+								$retornar->orWhere('productos.modelo','ilike',"%$filtro%");
 								/*if(is_numeric($filtro))
 								{*/
-									$retornar->orWhere('prods.ean','ilike',"%$filtro%");
-									$retornar->orWhere('prods.upc','ilike',"%$filtro%");
+									$retornar->orWhere('productos.ean','ilike',"%$filtro%");
+									$retornar->orWhere('productos.upc','ilike',"%$filtro%");
 								//}
 						});
 		}
@@ -86,9 +88,11 @@ class DatatablesController extends Controller
 	{
 		$parameters = $request->all();
 		//$ordenar = explode('|', $request->sort);
-		$retornar = Stock::select(['stock.id','stock.provs_id','prods_id','prods.ean','prods.upc','prods.tipo','prods.marca','prods.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','provs.nombre as proveedor','prods.serializado','clientes.nombre','clientes.apellido','clientes.id as clienteid','clientes.email','clientes.documento','clientes.domicilio'])
-							->join('prods','stock.prods_id','=','prods.id')
-							->join('provs','stock.provs_id','=','provs.id')
+		$retornar = Stock::select(['stock.id','stock.proveedores_id','productos_id','productos.ean','productos.upc','tipos_de_productos.nombre as tipo','marcas.nombre as marca','productos.modelo','stock.serial','stock.fecha_entrada','stock.fecha_salida','stock.precio_entrada','stock.precio_salida','proveedores.nombre as proveedor','productos.serializado','clientes.nombre','clientes.apellido','clientes.id as clienteid','clientes.email','clientes.documento','clientes.domicilio'])
+							->join('productos','stock.productos_id','=','productos.id')
+							->join('proveedores','stock.proveedores_id','=','proveedores.id')
+							->join('marcas','productos.marcas_id','=','marcas.id')
+							->join('tipos_de_productos','productos.tipos_id','=','tipos_de_productos.id')
 							->leftjoin('clientes','stock.clientes_id','=','clientes.id')
 							->where('stock.estado','=',true);
 		if($parameters['datafilter'] == 'disponible')
@@ -103,13 +107,13 @@ class DatatablesController extends Controller
 		{
 			$filtro = $parameters['search'];
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
-								$retornar->orWhere('prods.tipo','ilike',"%$filtro%");
-								$retornar->orWhere('prods.marca','ilike',"%$filtro%");
-								$retornar->orWhere('prods.modelo','ilike',"%$filtro%");
+								$retornar->orWhere('productos.tipo','ilike',"%$filtro%");
+								$retornar->orWhere('productos.marca','ilike',"%$filtro%");
+								$retornar->orWhere('productos.modelo','ilike',"%$filtro%");
 								$retornar->orWhere('stock.serial','ilike',"%$filtro%");
 								$retornar->orWhere('stock.fecha_salida','ilike',"%$filtro%");
-								$retornar->orWhere('prods.ean','ilike',"%$filtro%");
-								$retornar->orWhere('prods.upc','ilike',"%$filtro%");
+								$retornar->orWhere('productos.ean','ilike',"%$filtro%");
+								$retornar->orWhere('productos.upc','ilike',"%$filtro%");
 								$retornar->orWhere('stock.fecha_entrada','ilike',"%$filtro%");
 								if(is_numeric($filtro))
 								{
@@ -142,7 +146,7 @@ class DatatablesController extends Controller
 	}
 	public function getProveedoresEliminados()
 	{
-		$retornar = Proveedores::select(['provs.id', 'provs.nombre', 'provs.tel'])
+		$retornar = Proveedores::select(['proveedores.id', 'proveedores.nombre', 'proveedores.tel'])
 					->where('estado','=', false);
 		$datatables = app('datatables')
 						->of($retornar)
@@ -153,7 +157,7 @@ class DatatablesController extends Controller
 	}
 	public function getProductosEliminados()
 	{
-		$retornar = Productos::select(['prods.id', 'prods.tipo','prods.marca', 'prods.modelo'])
+		$retornar = Productos::select(['productos.id', 'productos.tipo','productos.marca', 'productos.modelo'])
 					->where('estado','=', false);
 		$datatables = app('datatables')
 						->of($retornar)

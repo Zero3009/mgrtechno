@@ -6,10 +6,10 @@ use App\PrimaryModel;
 
 class Productos extends PrimaryModel
 {
-    protected $table = 'prods';
+    protected $table = 'productos';
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
-    protected $fillable = ['tipo', 'marca','modelo','ean','upc','serializado','estado'];
+    protected $fillable = ['tipos_id', 'marcas_id','modelo','ean','upc','serializado','estado'];
 
     protected $casts = [
         'tipo'    	=> 'string',
@@ -21,14 +21,6 @@ class Productos extends PrimaryModel
         'estado' => 'boolean'
     ];
 
-	public function setTipoAttribute($value)
-	{
-	    $this->attributes['tipo'] = parent::toUpperOrNull($value);
-	}
-	public function setMarcaAttribute($value)
-	{	
-    	$this->attributes['marca'] = parent::toUpperOrNull($value);
-	}
 	public function setModeloAttribute($value)
 	{	
     	$this->attributes['modelo'] = parent::toUpperOrNull($value);

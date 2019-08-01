@@ -6,7 +6,7 @@ use App\PrimaryModel;
 
 class Proveedores extends PrimaryModel
 {
-    protected $table = 'provs';
+    protected $table = 'proveedores';
 	protected $primaryKey = 'id';
     //Definimos los campos que se pueden llenar con asignación masiva
     protected $fillable = ['nombre', 'tel','estado'];

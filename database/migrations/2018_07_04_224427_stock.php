@@ -15,15 +15,15 @@ class Stock extends Migration
         Schema::create('stock', function(Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('prods_id')->unsigned();
-            $table->foreign('prods_id')->references('id')->on('prods')->onDelete('restrict')->onUpdate('restrict');
+            $table->integer('productos_id')->unsigned();
+            $table->foreign('productos_id')->references('id')->on('productos')->onDelete('restrict')->onUpdate('restrict');
 
-            $table->integer('provs_id')->unsigned();
-            $table->foreign('provs_id')->references('id')->on('provs')->onDelete('restrict')->onUpdate('restrict');
+            $table->integer('proveedores_id')->unsigned();
+            $table->foreign('proveedores_id')->references('id')->on('proveedores')->onDelete('restrict')->onUpdate('restrict');
             $table->string('serial', 100)->unique()->nullable();
-            $table->decimal('precio_entrada',8,0);
+            $table->decimal('precio_entrada',8,0)->nullable();
             $table->decimal('precio_salida',8,0)->nullable();
-            $table->date('fecha_entrada');
+            $table->date('fecha_entrada')->nullable();
             $table->date('fecha_salida')->nullable();
             $table->boolean('disponible')->default(true);
             

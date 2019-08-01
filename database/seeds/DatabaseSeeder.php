@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'matiasgr97@Outlook.com',
             'password' => bcrypt('cil123'),
         ]);
+        
     }
 }

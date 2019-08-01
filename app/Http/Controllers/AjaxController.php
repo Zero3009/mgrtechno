@@ -7,6 +7,8 @@ use App\Productos;
 use App\Proveedores;
 use App\Stock;
 use App\Clientes;
+use App\TiposDeProductos;
+use App\Marcas;
 use DB;
 use Response;
 
@@ -14,38 +16,37 @@ class AjaxController extends Controller
 {
 	public function getProductos()
 	{
-			$ajax = Productos::select('prods.modelo as label','prods.id as value')
-							->where('prods.estado','=',true)
+			$ajax = Productos::select('productos.modelo as label','productos.id as value')
+							->where('productos.estado','=',true)
 							->get();
 	    return Response::json($ajax);
 	}
 	public function getMarcas(Request $request)
 	{
-		$ajax = Productos::select('prods.marca as value')
-						->where('prods.estado','=',true)
-						->groupBy('prods.marca')
-						->pluck('value');
+		$ajax = Marcas::select('marcas.nombre as text','marcas.id')
+						->where('marcas.estado','=',true)
+						->get();
 		
 		return Response::json($ajax);
 	}
 	public function getCodbarras(Request $request){
-		/*$ajax = Productos::select('prods.codbarras as text','prods.id as value', 'prods.modelo','prods.serializado')
-							->where('prods.estado','=', true)
+		/*$ajax = Productos::select('productos.codbarras as text','productos.id as value', 'productos.modelo','productos.serializado')
+							->where('productos.estado','=', true)
 							->get();*/
 		$parameters = $request->all();
-		$ajax = Productos::select('prods.modelo','prods.ean as ean','prods.upc as upc','prods.id','prods.serializado');
+		$ajax = Productos::select('productos.modelo','productos.ean as ean','productos.upc as upc','productos.id','productos.serializado');
 				if($parameters['search'])
 				{
 		
 					$filtro = $parameters['search'];
 					$ajax = $ajax->where(function ($ajax) use ($filtro) {
-										$ajax->orWhere('prods.modelo','ilike',"%$filtro%");
-										//$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+										$ajax->orWhere('productos.modelo','ilike',"%$filtro%");
+										//$retornar->orWhere('proveedores.nombre','ilike',"%$filtro%");
 										if(is_numeric($filtro))
 										{
-											$ajax->orWhere('prods.ean','ilike',"%$filtro%");
-											$ajax->orWhere('prods.upc','ilike',"%$filtro%");
-											//$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+											$ajax->orWhere('productos.ean','ilike',"%$filtro%");
+											$ajax->orWhere('productos.upc','ilike',"%$filtro%");
+											//$retornar->orWhere('productos.codbarras','ilike',"%$filtro%");
 										}
 					});
 		
@@ -53,8 +54,8 @@ class AjaxController extends Controller
 		return Response::json($ajax->get());
 	}
 	public function getProveedores(){
-		$ajax = Proveedores::select('provs.nombre as text','provs.id as value')
-								->where('provs.estado','=', true)
+		$ajax = Proveedores::select('proveedores.nombre as text','proveedores.id as value')
+								->where('proveedores.estado','=', true)
 								->get();
 		return Response::json($ajax);	
 	}
@@ -90,18 +91,17 @@ class AjaxController extends Controller
 					->get();
 		return Response::json($ajax);
 	}
-	public function getTiposProds()
+	public function getTiposProductos()
 	{
-		$ajax = Productos::select('prods.tipo as value')
-			->groupBy('prods.tipo')
-			->pluck('value');
+		$ajax = TiposDeProductos::select('tipos_de_productos.nombre as text','tipos_de_productos.id')->get();
+			//>pluck('value');
 
 		return Response::json($ajax);
 	}
 	public function checkCodbarras(Request $request)
 	{
-		$ajax = Productos::select('prods.codbarras as check')
-				->where('prods.codbarras','=',$request->codbarras)
+		$ajax = Productos::select('productos.codbarras as check')
+				->where('productos.codbarras','=',$request->codbarras)
 				->get();
 		return Response::json($ajax);
 	}
@@ -116,12 +116,12 @@ class AjaxController extends Controller
 					$ajax = $ajax->where(function ($ajax) use ($filtro) {
 										$ajax->orWhere('clientes.nombre','ilike',"%$filtro%");
 										$ajax->orWhere('clientes.email','ilike',"%$filtro%");
-										//$retornar->orWhere('provs.nombre','ilike',"%$filtro%");
+										//$retornar->orWhere('proveedores.nombre','ilike',"%$filtro%");
 										$ajax->orWhere('clientes.apellido','ilike',"%$filtro%");
 										if(is_numeric($filtro))
 										{
 											$ajax->orWhere('clientes.documento','ilike',"%$filtro%");
-											//$retornar->orWhere('prods.codbarras','ilike',"%$filtro%");
+											//$retornar->orWhere('productos.codbarras','ilike',"%$filtro%");
 										}
 					});
 		
