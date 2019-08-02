@@ -37,7 +37,7 @@
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn color="success" dark class="mb-2" v-on:click="multiInit()">Salida multiple</v-btn>
-          <v-dialog v-model="dialog" max-width="500px">
+          <v-dialog persistent v-model="dialog" max-width="600px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
             </template>
@@ -365,7 +365,7 @@
       </v-icon>
     </template>
       </v-data-table>
-      <v-dialog persistant v-model="multiDialog">
+      <v-dialog persistent v-model="multiDialog">
         <v-card>
           <v-card-text>
             <v-data-table :items="multiSalida" :headers="headers">
