@@ -18,6 +18,8 @@
         :loading="loading"
         class="elevation-1"
         show-expand
+        show-select
+        v-model="multiSalida"
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -34,6 +36,7 @@
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
+          <v-btn color="success" dark class="mb-2" v-on:click="multiInit()">Salida multiple</v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
@@ -362,6 +365,48 @@
       </v-icon>
     </template>
       </v-data-table>
+      <v-dialog persistant v-model="multiDialog">
+        <v-card>
+          <v-card-text>
+            <v-data-table :items="multiSalida" :headers="headers">
+              <template v-slot:item.fecha_salida="{ item }">
+                <v-menu
+                  :ref="'fecha_salida' +item.id"
+                  v-model="item.fecha_open"
+                  :close-on-content-click="false"
+                  :return-value.sync="item.fecha_open"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="item.fecha_salida"
+                    label="Fecha de salida"
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                  <v-date-picker  locale="es-419" v-model="item.fecha_salida" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="item.fecha_open = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs['fecha_salida' + item.id].save(item.fecha_salida)">OK</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </template>
+              <template v-slot:item.precio_salida="{ item }">
+                <v-text-field v-model="item.precio_salida" type="numeric" label="Precio de salida" required></v-text-field>
+              </template>
+            </v-data-table>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="blue darken-1" text @click="multiClose">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="multiSave">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>
 </template>
 <script>
@@ -369,6 +414,11 @@
     
     data () {
       return {
+        salidaTotal: 0,
+        item_fecha_salida: false,
+        multiprecio: [],
+        multiDialog: false,
+        multiSalida: [],
         singleExpand: false,
         expanded: [],
         descriptionLimit: 60,
@@ -431,6 +481,20 @@
         desserts: [],
         loading: true,
         options: {},
+        headers: [
+          //{ text: 'Código UPC', value: 'upc' },
+          //{ text: 'Código EAN', value: 'ean'},
+          //{ text: 'Tipo de producto', value: 'tipo' },
+          { text: 'Modelo', value: 'modelo' },
+          { text: 'Marca', value: 'marca' },
+          { text: 'Serial', value: 'serial'},
+          { text: 'Proveedor', value: 'proveedor'},
+          { text: 'Fecha de entrada', value: 'fecha_entrada'},
+          { text: 'Precio de entrada', value: 'precio_entrada'},
+          { text: 'Fecha de salida', value: 'fecha_salida'},
+          { text: 'Precio de salida', value: 'precio_salida'},
+          { text: 'Actions', value: 'action', sortable: false }
+        ],
         headers: [
           //{ text: 'Código UPC', value: 'upc' },
           //{ text: 'Código EAN', value: 'ean'},
@@ -513,6 +577,22 @@
       }
     },
     watch: {
+      multiSalida:
+      {
+        handler ()
+        {
+          if(this.multiSalida.length > this.salidaTotal)
+          {
+            this.multiSalida[this.multiSalida.length -1].fecha_open = false;
+            this.salidaTotal = this.salidaTotal +1;
+          }
+          else
+          {
+            this.salidaTotal = this.salidaTotal -1;
+          }
+        },
+        deep: true
+      },
       disponible:
       {
         handler () {
@@ -572,6 +652,10 @@
       this.getDataFromApi()
     },
     methods: {
+      multiInit()
+      {
+        this.multiDialog = true
+      },
       fields () {
         if (!this.model) return []
 
@@ -757,7 +841,20 @@
               this.comboboxes.fields.seriales = a;
             
             });
-      } 
+      },
+      multiClose()
+      {
+        this.multiDialog = false;
+
+      },
+      multiSave()
+      {
+        axios.post('/stock/multisalida',
+          this.multiSalida
+        ).then(response=> {
+          console.log(response)
+        });
+      }
     },
   }
 </script>

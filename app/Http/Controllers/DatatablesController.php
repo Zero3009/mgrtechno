@@ -108,6 +108,7 @@ class DatatablesController extends Controller
 			$filtro = $parameters['search'];
 			$retornar = $retornar->where(function ($retornar) use ($filtro) {
 								$retornar->orWhere('tipos_de_productos.nombre','ilike',"%$filtro%");
+								$retornar->orWhere('proveedores.nombre','ilike',"%$filtro%");
 								$retornar->orWhere('marcas.nombre','ilike',"%$filtro%");
 								$retornar->orWhere('productos.modelo','ilike',"%$filtro%");
 								$retornar->orWhere('stock.serial','ilike',"%$filtro%");
