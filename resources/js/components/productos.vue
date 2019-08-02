@@ -256,10 +256,16 @@
         var post = {}
         Object.entries(this.selectedItem).forEach(function(value,key)
         {
-          if(value[1] != null && value[1] != "")
+          if(value[0] == "serializado")
+          {
+            post[value[0]] = value[1]
+          }
+          else if(value[1] != null && value[1] != "")
           {
             post[value[0]] = value[1]  
           }
+          
+          
           
         });
         return post
