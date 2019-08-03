@@ -7,7 +7,9 @@
             <v-radio label="No disponible" value="nodisponible"></v-radio>
         </v-radio-group>
       </v-card-title>
-      <v-data-table
+      <stocktable>
+      </stocktable>
+      <!--<v-data-table
         :single-expand="singleExpand"
         :expanded.sync="expanded"
         :search="search"
@@ -21,8 +23,9 @@
         show-select
         v-model="multiSalida"
       >
-        <template v-slot:top>
-          <v-toolbar flat>
+        <template v-slot:top>-->
+
+          <!--<v-toolbar flat>
           <v-toolbar-title>Productos</v-toolbar-title>
 
           <v-spacer></v-spacer>
@@ -44,10 +47,6 @@
             <v-card  v-if="formCalc == false">
               <v-card-title>
                 <span class="headline">{{ fullTitle }}</span>
-                <!--  <v-progress-linear
-                  v-model="valueDeterminate"
-                  color="yellow accent-4"
-                ></v-progress-linear>-->
               </v-card-title>
                 <v-form
                   ref="form"
@@ -315,9 +314,9 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:expanded-item="{ item }">
+        </v-toolbar>-->
+      <!--</template>-->
+      <!--<template v-slot:expanded-item="{ item }">
         <td :colspan="headers.length">
           <v-simple-table
                   fixed-header
@@ -364,7 +363,7 @@
         delete
       </v-icon>
     </template>
-      </v-data-table>
+      </v-data-table>-->
       <v-dialog persistent v-model="multiDialog">
         <v-card>
           <v-card-text>
@@ -410,8 +409,12 @@
     </v-card>
 </template>
 <script>
+  import stocktable from './tables/stocktable'
   export default {
-    
+    components:
+    {
+      stocktable
+    },
     data () {
       return {
         salidaTotal: 0,
@@ -447,7 +450,7 @@
         /*fecha_salidaRules: [
           v => !!v || 'Fecha de salida requerida'
         ],*/
-        disponible: "todos",
+        //disponible: "todos",
         valid: true,
         formTitle: "",
         fecha_entrada: false,
@@ -541,6 +544,16 @@
     },
     computed:
     {
+      disponible: {
+        get()
+        {
+          return this.$store.getters.getDisponible
+        },
+        set(value)
+        {
+          this.$store.commit('setDisponible', value)
+        }
+      },
       fullTitle: function()
       {
         if(this.selectedItem.codbarras)
@@ -648,9 +661,9 @@
               });
       }
     },
-    mounted () {
+    /*mounted () {
       this.getDataFromApi()
-    },
+    },*/
     methods: {
       multiInit()
       {
@@ -675,7 +688,7 @@
           return Object.assign({}, entry, { Description })
         })
       },
-      getDataFromApi () {
+      /*getDataFromApi () {
         this.loading = true
           const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
           axios.post('/datatables/getstock',
@@ -692,7 +705,7 @@
             this.totalDesserts = response.data.total
             this.loading = false;
           });
-      },
+      },*/
       newItem ()
       {
         this.formTitle = "Nuevo producto"

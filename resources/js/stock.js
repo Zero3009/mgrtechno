@@ -1,12 +1,13 @@
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-
+import store from './store/stockStore'
 require('./bootstrap');
 Vue.use(Vuetify)
 Vue.component('stock', require('./components/stock.vue').default);
 
 const app = new Vue({
     el: '#app',
+    store,
     vuetify: new Vuetify({
       theme: { dark: true },
     }),
