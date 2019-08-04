@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function()
 	Route::post('/ajax/marcas', ['uses' => 'AjaxController@getMarcas']);
 	Route::post('/ajax/codbarras', ['uses' => 'AjaxController@getCodbarras']);
 	Route::post('/ajax/proveedores', ['uses' => 'AjaxController@getProveedores']);
-	Route::get('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
+	Route::post('/ajax/seriales', ['uses' => 'AjaxController@getSeriales']);
 	Route::get('/ajax/chart', ['uses' => 'AjaxController@LineEntrada']);
 	Route::get('/ajax/linesalida',['uses' => 'AjaxController@LineSalida']);
 	Route::post('/ajax/tiposprods',['uses' => 'AjaxController@getTiposProductos']);

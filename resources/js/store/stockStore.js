@@ -7,6 +7,7 @@ const stockStore = new Vuex.Store({
     	search: null,
         disponible: "todos",
         dialog: false,
+        runSearch: true,
         selectedItem: {
             id: 0,
             codbarras: null,
@@ -23,6 +24,10 @@ const stockStore = new Vuex.Store({
         },
     },
     mutations: {
+        setRunSearch(state, n)
+        {
+            state.runSearch = n
+        },
     	setSearch(state, n)
     	{
     		state.search = n
@@ -41,6 +46,9 @@ const stockStore = new Vuex.Store({
         }
     },
     getters: {
+        getRunSearch: state => {
+            return state.runSearch
+        },
 		getSearch: state => {
 			return state.search
 		},

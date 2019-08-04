@@ -17,18 +17,6 @@
           <slottop>
           </slottop>
           <!--<v-toolbar flat>
-          <v-toolbar-title>Productos</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-          
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn color="success" dark class="mb-2" v-on:click="multiInit()">Salida multiple</v-btn>
           <v-dialog persistent v-model="dialog" max-width="600px">
@@ -368,7 +356,8 @@
   		{
   			...mapGetters([
   				'getSearch',
-  				'getDisponible'
+  				'getDisponible',
+          'getRunSearch'
 			]),
 			edititem: {
 				get()
@@ -419,25 +408,26 @@
 	          		this.editedIndex = -1
 	          		this.getDataFromApi();
         		}, 300)
-      		},
-      		getDataFromApi () {
-        		this.loading = true
-	          	const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
-	          	axios.post('/datatables/getstock',
-          		{
-		            datafilter: this.disponible,
-		            sortDesc: this.options.sortDesc,
-		            search: this.search,
-		            sortBy: this.options.sortBy,
-		            descending: this.options.descending,
-		            page: this.options.page,
-		            itemsPerPage: this.options.itemsPerPage
-          		}).then(response => {
-		            this.desserts = response.data.data
-		            this.totalDesserts = response.data.total
-		            this.loading = false;
-          		});
-      		},
+    		},
+    		getDataFromApi () {
+      		this.loading = true
+          	const { sortBy, descending, page, itemsPerPage, sortDesc } = this.options
+          	axios.post('/datatables/getstock',
+        		{
+	            datafilter: this.disponible,
+	            sortDesc: this.options.sortDesc,
+	            search: this.search,
+	            sortBy: this.options.sortBy,
+	            descending: this.options.descending,
+	            page: this.options.page,
+	            itemsPerPage: this.options.itemsPerPage
+        		}).then(response => {
+	            this.desserts = response.data.data
+	            this.totalDesserts = response.data.total
+	            this.loading = false;
+              this.$store.commit('setRunSearch',false)
+        		});
+    		},
   		},
   		mounted()
   		{
@@ -451,13 +441,16 @@
                 	this.search = newValue;
 		          	this.getDataFromApi()
 		        
-            },
-            getDisponible: function(newValue, oldValue) {
-                //handler () {
-                	this.disponible = newValue;
-		          	this.getDataFromApi()
-		        
-            },
+        },
+        getDisponible: function(newValue, oldValue) {
+            //handler () {
+            this.disponible = newValue;
+          	this.getDataFromApi()
+        
+        },
+        getRunSearch: function(newValue, oldValue) {
+            this.getDataFromApi()
+        },
 
   		}
   	}

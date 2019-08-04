@@ -19,27 +19,7 @@
 	                      			<autocomplete v-model="selectedItem.codbarras" palceholder="Escribir para buscar" label="Producto" url="/ajax/codbarras"></autocomplete>
 	                        	</v-flex>
 	                        	<v-flex xs18 sm9 md6>
-	                          		<v-combobox
-			                            v-model="selectedItem.proveedor"
-			                            :items="comboboxes.fields.proveedores"
-			                            :search-input.sync="comboboxes.searching.proveedor"
-			                            hide-selected
-			                            hint="Seleccione la marca, si no existe escribala"
-			                            label="Proveedor"
-			                            no-filter
-			                            persistent-hint
-			                            :rules="proveedorRules"
-	                          		>
-	                            <template v-slot:no-data>
-	                              <v-list-item>
-	                                <v-list-item-content>
-	                                  <v-list-item-title>
-	                                    No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-	                                  </v-list-item-title>
-	                                </v-list-item-content>
-	                              </v-list-item>
-	                            </template>
-	                          </v-combobox>
+	                        		<combobox :rules="proveedorRules" v-model="selectedItem.proveedor" url="/ajax/proveedores" label="Proveedor"></combobox>
 	                        </v-flex>
 	                        {{selectedItem}}
 	                        <v-flex xs18 sm9 md6>
@@ -49,7 +29,7 @@
 	                      <v-text-field v-model="selectedItem.precio_entrada" :rules="precio_entradaRules" type="numeric" label="Precio de entrada" required></v-text-field>  
 	                    </v-flex>
 	                    <v-flex xs18 sm9 md6>
-	                    	<datepicker ref="fecha_salida" label="Fecha de salida"></datepicker>	
+	                    	<datepicker ref="fecha_salida" v-model="selectedItem.fecha_salida" label="Fecha de salida"></datepicker>	
 	                    </v-flex>
 	                    <v-flex xs18 sm9 md6>
 	                      <v-text-field v-model="selectedItem.precio_salida" type="numeric" label="Precio de salida" required></v-text-field>  
@@ -58,30 +38,10 @@
 	                    	<autocomplete label="Cliente" v-model="selectedItem.cliente" placeholder="Escribir para buscar" url="/ajax/clientes"></autocomplete>    
                         </v-flex>
 	                    <v-flex xs36 sm18 md12 v-if="serializado == true">
+	                    	<combobox v-model="selectedItem.seriales" label="Seriales" url="/ajax/seriales" disabledAll="true">
+	                    	</combobox>
+	                      
 	                      <!--<v-combobox
-	                        v-if="formTitle == 'Nuevo producto'"
-	                        v-model="selectedItem.seriales"
-	                        :items="comboboxes.fields.seriales"
-	                        :search-input.sync="comboboxes.searching.seriales"
-	                        hide-selected
-	                        small-chips
-	                        multiple
-	                        hint="Introduzca todos los seriales del mismo producto"
-	                        label="Seriales"
-	                        persistent-hint
-	                        :rules="serialesRules"
-	                      >
-	                        <template v-slot:no-data>
-	                          <v-list-item>
-	                            <v-list-item-content>
-	                              <v-list-item-title>
-	                                No se encontraron resultados para "<strong>{{ comboboxes.searching.tipo }}</strong>". Presiona <kbd>enter</kbd> para crearlo
-	                              </v-list-item-title>
-	                            </v-list-item-content>
-	                          </v-list-item>
-	                        </template>
-	                      </v-combobox>
-	                      <v-combobox
 	                        v-else-if="formTitle == 'Editar producto'"
 	                        v-model="selectedItem.serial"
 	                        :items="comboboxes.fields.seriales"
@@ -181,11 +141,13 @@
       	</v-dialog>
 </template>
 <script>
+	import combobox from './formInputs/combobox'
 	import datepicker from './formInputs/datepicker'
 	import autocomplete from './formInputs/autocomplete'
 	export default{
 		components:
 		{
+			combobox,
 			datepicker,
 			autocomplete
 		},
@@ -308,11 +270,12 @@
         		this.close()
       		},
       		close () {
-        		this.search = false
+      			this.getDialog = false;
+        		//this.search = false
         		setTimeout(() => {
 	          		this.selectedItem = Object.assign({}, this.defaultItem)
 	          		this.editedIndex = -1
-	          		this.getDataFromApi();
+	          		this.$store.commit('setRunSearch', true)
         		}, 300)
       		},
 		},
