@@ -11,7 +11,7 @@
       	></v-text-field>
       	<v-spacer></v-spacer>
       	<v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
-      	<newItem></newItem>
+      	<stockDialog></stockDialog>
       	<!--<v-dialog v-model="dialog" max-width="500px">
 	        <template v-slot:activator="{ on }">
 	          	<v-btn color="primary" dark class="mb-2" v-on:click="newItem()">New Item</v-btn>
@@ -289,12 +289,12 @@
     </v-toolbar>
 </template>
 <script>
-	import newItem from './vdialogs/newItem'
+	import stockDialog from './vdialogs/stockDialog'
 	export default
 	{
 		components:
 		{
-			newItem
+			stockDialog
 		},
 		computed:
 		{

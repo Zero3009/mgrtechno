@@ -358,17 +358,17 @@
   				'getSearch',
   				'getDisponible',
           'getRunSearch'
-			]),
-			edititem: {
-				get()
-				{
-					return this.$store.getters.getSelectedItem
-				},
-				set(value)
-				{
-					this.$store.commit('setSelectedItem', value)
-				}
-			}
+			 ]),
+  			edititem: {
+  				get()
+  				{
+  					return this.$store.getters.getSelectedItem
+  				},
+  				set(value)
+  				{
+  					this.$store.commit('setSelectedItem', value)
+  				}
+  			}
   		},
   		data()
   		{
@@ -399,7 +399,7 @@
   		{
   			editItem(item)
   			{
-  				this.edititem = item 
+  				this.$store.commit('setItem', item);
   			},
   			close () {
         		this.dialog = false

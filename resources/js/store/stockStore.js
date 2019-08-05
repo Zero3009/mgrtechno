@@ -8,22 +8,13 @@ const stockStore = new Vuex.Store({
         disponible: "todos",
         dialog: false,
         runSearch: true,
-        selectedItem: {
-            id: 0,
-            codbarras: null,
-            tipo: null,
-            marca: null,
-            modelo: null,
-            proveedor: null,
-            fecha_entrada: null,
-            fecha_salida: null,
-            precio_entrada: null,
-            precio_salida: null,
-            seriales: null,
-            cliente: null
-        },
+        item: null
     },
     mutations: {
+        setItem(state, n)
+        {
+            state.item = n
+        },
         setRunSearch(state, n)
         {
             state.runSearch = n
@@ -39,13 +30,12 @@ const stockStore = new Vuex.Store({
         setDialog(state, n)
         {
             state.dialog = n
-        },
-        setSelectedItem(state, n)
-        {
-            state.selectedItem = n
         }
     },
     getters: {
+        getItem: state => {
+            return state.item
+        },
         getRunSearch: state => {
             return state.runSearch
         },
@@ -57,9 +47,6 @@ const stockStore = new Vuex.Store({
         },
         getDialog: state => {
             return state.dialog
-        },
-        getSelectedItem: state => {
-            return state.selectedItem
         }
 	},
     actions: {
