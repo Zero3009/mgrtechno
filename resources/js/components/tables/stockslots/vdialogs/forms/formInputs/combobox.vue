@@ -9,6 +9,7 @@
 		no-filter
 		persistent-hint
 		:rules="rules"
+		:multiple="multiple"
 	>
 		<template v-slot:no-data>
 			<v-list-item>
@@ -27,7 +28,7 @@
 		{
 			return{
 				search: null,
-				val: null,
+				val: this.default,
 				values: []
 			}
 		},
@@ -41,15 +42,28 @@
 	        		}
     			)
         		.then(response => {
-        			if(this.disabledAll == "true")
+        			if(this.disabledAll == true)
         			{
+        				var filter = this.default
         				var a = [];
 		              	response.data.forEach(function(item){
-                            a.push({
-                              value: item.value,
-                              disabled: true,
-                              text: item.text
-                            });
+		              		if(item.text != filter)
+		              		{
+	                            a.push({
+	                              	value: item.value,
+	                              	disabled: true,
+	                              	text: item.text
+	                            });
+              				}
+              				else if(item.text == filter)
+              				{
+              					console.log(item.value)
+              					a.push({
+	                              	value: item.value,
+	                              	disabled: false,
+	                              	text: item.text
+	                            });	
+              				}
               			}); 
               			this.values = a;
         			}
@@ -65,7 +79,34 @@
 				this.$emit('input', this.val)				
 			}
 		},
-		props:['url','rules','label','disabledAll'],
+		props:['url','rules','label','disabledAll', 'multiple','default'],
+		props:
+		{
+			url:
+			{
+				type: String
+			},
+			rules:
+			{
+				type: Array
+			},
+			label:
+			{
+				type: String
+			},
+			disabledAll:
+			{
+				type: Boolean
+			},
+			multiple:
+			{
+				type: Boolean
+			},
+			default:
+			{
+
+			}
+		},
 		watch:
 		{
 			search:

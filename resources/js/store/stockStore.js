@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const stockStore = new Vuex.Store({
     state: {
+        action: null,
     	search: null,
         disponible: "todos",
         dialog: false,
@@ -11,6 +12,10 @@ const stockStore = new Vuex.Store({
         item: null
     },
     mutations: {
+        setAction(state,n)
+        {
+            state.action = n
+        },
         setItem(state, n)
         {
             state.item = n
@@ -33,6 +38,9 @@ const stockStore = new Vuex.Store({
         }
     },
     getters: {
+        getAction: state => {
+            return state.action
+        },
         getItem: state => {
             return state.item
         },

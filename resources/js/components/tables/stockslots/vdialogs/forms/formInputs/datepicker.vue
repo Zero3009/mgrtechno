@@ -32,13 +32,13 @@
 		{
 			return{
 				fecha: false,
-				fecha_value: null,
+				fecha_value: this.default,
 				fecha_entradaRules: [
 		          	v => !!v || 'Fecha de entrada requerida'
 		        ],
 			}
 		},
-		props:['label','value'],
+		props:['label','value','default'],
 		methods:{
 			save(value)
 			{

@@ -399,7 +399,9 @@
   		{
   			editItem(item)
   			{
+          this.$store.commit('setDialog',true)
   				this.$store.commit('setItem', item);
+          this.$store.commit('setAction', 'editar');
   			},
   			close () {
         		this.dialog = false
@@ -451,6 +453,12 @@
         getRunSearch: function(newValue, oldValue) {
             this.getDataFromApi()
         },
+        options: {
+          handler () {
+            this.getDataFromApi()
+            },
+            deep: true,
+          },
 
   		}
   	}

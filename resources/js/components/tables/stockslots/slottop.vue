@@ -331,6 +331,7 @@
       		newItem ()
 	      	{
 		        //this.formTitle = "Nuevo producto"
+		        this.$store.commit('setAction', 'nuevo')
 		        this.$store.commit('setDialog', true)
 		        //this.selectedItem = Object.assign({}, this.defaultItem)
 		        //this.dialog = true  

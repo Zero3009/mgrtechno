@@ -7,20 +7,22 @@
       	color="white"
       	hide-no-data
       	hide-selected
-      	item-text="modelo"
-      	item-value="id"
+      	item-text="text"
+      	:item-value="itemsValue"
       	no-filter
       	:label="label"
       	:placeholder="placeholder"
       	prepend-icon="mdi-database-search"
       	return-object
     >
-    <template v-slot:item="data">
+    <template v-slot:item="item">
 		<v-list-item-content>
-			<v-list-item-title v-html="data.item.modelo"></v-list-item-title>
-			<v-list-item-title v-html="data.item.nombre"></v-list-item-title>
-			<v-list-item-subtitle v-if="data.item.ean" v-html="'EAN:' + data.item.ean"></v-list-item-subtitle>
-			<v-list-item-subtitle v-if="data.item.upc" v-html="'UPC:' + data.item.upc"></v-list-item-subtitle>
+			<v-list-item-title v-if="item.item.modelo" v-html="item.item.marca + ' ' +item.item.modelo"></v-list-item-title>
+			<v-list-item-title v-if="item.item.text" v-html="item.item.text + ' ' + item.item.apellido"></v-list-item-title>
+			<v-list-item-subtitle v-if="item.item.documento" v-html="'DNI:' + item.item.documento"></v-list-item-subtitle>
+			<v-list-item-subtitle v-if="item.item.ean" v-html="'EAN:' + item.item.ean"></v-list-item-subtitle>
+			<v-list-item-subtitle v-if="item.item.ean" v-html="'EAN:' + item.item.ean"></v-list-item-subtitle>
+			<v-list-item-subtitle v-if="item.item.upc" v-html="'UPC:' + item.item.upc"></v-list-item-subtitle>
 		</v-list-item-content>
 	</template>
        	<!--<template v-slot:item="data">
@@ -38,7 +40,7 @@
 		{
 			return{
 				isLoading: false,
-				val: null,
+				val: this.default,
 				items:null,
 				search: ''
 			}
@@ -50,7 +52,7 @@
 				this.$emit('input', this.val)				
 			}
 		},
-		props:['label','placeholder','url','value'],
+		props:['label','placeholder','url','value','default','itemsValue'],
 		watch:
 		{
 			val:

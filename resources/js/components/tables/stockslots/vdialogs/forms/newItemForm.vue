@@ -30,7 +30,7 @@
 							<autocomplete label="Cliente" v-model="item.cliente" placeholder="Escribir para buscar" url="/ajax/clientes"></autocomplete>    
 						</v-flex>
 						<v-flex xs36 sm18 md12 v-if="serializado == true">
-							<combobox v-model="item.seriales" label="Seriales" url="/ajax/seriales" disabledAll="true">
+							<combobox v-model="item.seriales" label="Seriales" url="/ajax/seriales" multiple disabledAll>
 							</combobox>
 						</v-flex>
 					</v-layout>
@@ -115,15 +115,25 @@
 		{
 			close () {
         		this.$store.commit('setDialog', false)
+        		this.$store.commit('setAction', null)
         		setTimeout(() => {
           			this.selectedItem = Object.assign({}, this.defaultItem)
           			this.editedIndex = -1
-          			this.getDataFromApi();
+          			//this.getDataFromApi();
         		}, 300)
      		},
+     		save()
+     		{
+     			axios.post('/admin/stock/nuevo',
+                this.item).then(response => {
+                  
+                });
+                this.close();
+     		}
 		},
 		props: {
-			multiple: Boolean
+			multiple: Boolean,
+			disabledAll: Boolean
 		}
 	}
 </script>

@@ -36,7 +36,8 @@ class AjaxController extends Controller
 							->where('productos.estado','=', true)
 							->get();*/
 		$parameters = $request->all();
-		$ajax = Productos::select('productos.modelo','productos.ean as ean','productos.upc as upc','productos.id','productos.serializado');
+		$ajax = Productos::select('marcas.nombre as marca','productos.modelo as text','productos.ean as ean','productos.upc as upc','productos.id','productos.serializado')
+								->join('marcas','marcas.id','=','productos.marcas_id');
 				if($parameters['search'])
 				{
 		
@@ -57,7 +58,7 @@ class AjaxController extends Controller
 	}
 	public function getProveedores(Request $request){
 		$filtro = $request->search;
-		$ajax = Proveedores::select('proveedores.nombre as text','proveedores.id as value')
+		$ajax = Proveedores::select('proveedores.nombre as text','proveedores.id')
 								->where('proveedores.estado','=', true)
 								->where('proveedores.nombre','ilike', "%$filtro%")
 								->get();
@@ -67,7 +68,13 @@ class AjaxController extends Controller
 	{
 		$ajax = Stock::select('stock.serial as text','stock.serial as value')
 						->where('stock.estado','=',true)
-						->get();
+						->where('stock.serial','<>',null);
+						if($request->search)
+						{
+							$filtro = $request->search;
+							$ajax->where('stock.serial','ilike',"%$filtro%");
+						}
+						$ajax = $ajax->get();
 			
 
 		return Response::json($ajax);
@@ -115,7 +122,7 @@ class AjaxController extends Controller
 	}
 	public function getClientes(Request $request)
 	{
-		$ajax = Clientes::select('clientes.id','clientes.nombre', 'clientes.apellido', 'clientes.documento','clientes.email')
+		$ajax = Clientes::select('clientes.id','clientes.nombre as text', 'clientes.apellido', 'clientes.documento','clientes.email')
 				->where('clientes.estado','=',true);
 				if($request->search)
 				{

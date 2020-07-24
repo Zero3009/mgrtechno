@@ -1,6 +1,7 @@
 <template>
 	<v-dialog persistent v-model="getDialog" max-width="600px">
-		<newItemForm></newItemForm>
+		<newItemForm v-if="getAction == 'nuevo'"></newItemForm>
+		<editItemForm v-else-if="getAction == 'editar'"></editItemForm>
                       		
                       
                       <!--<v-combobox
@@ -106,6 +107,16 @@
 		},
 		computed:
 		{
+			getAction: {
+				get()
+				{
+					return this.$store.getters.getAction
+				},
+				set(value)
+				{
+					this.$store.commit('setAction', value)
+				}
+			},
 			getDialog: {
 				get()
 				{

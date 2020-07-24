@@ -65,7 +65,7 @@ class StockController extends Controller
                     $query= Stock::create([
                         'clientes_id' => $parameters['cliente']['id'] ?? null,
                         'productos_id' => $parameters['codbarras']['id'],
-                        'proveedores_id' => $parameters['proveedor']['value'],
+                        'proveedores_id' => $parameters['proveedor']['id'],
                         'serial' => $parameters['seriales'][$i],
                         'precio_entrada' => $parameters['precio_entrada'] ?? null,
                         'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
@@ -79,7 +79,7 @@ class StockController extends Controller
             {
                 $query= Stock::create([
                     'productos_id' => $parameters['codbarras']['id'],
-                    'proveedores_id' => $parameters['proveedor']['value'],
+                    'proveedores_id' => $parameters['proveedor']['id'],
                     'precio_entrada' => $parameters['precio_entrada'] ?? null,
                     'fecha_entrada' => $parameters['fecha_entrada'] ?? null,
                     'disponible' => $disp,
@@ -141,13 +141,13 @@ class StockController extends Controller
             'fecha_entrada' => $post['fecha_entrada'],
             'precio_entrada' => $post['precio_entrada'],
             'serial' => $post['serial'],
-            'proveedores_id' => $post['proveedor']['value'],
+            'proveedores_id' => $post['proveedor']['id'],
             'disponible' => $disp,
             'fecha_salida' => $post['fecha_salida'] ?? null,
             'precio_salida' => $post['precio_salida'] ?? null 
         ]);
         
-        return Redirect::to('/admin/stock')->with('status', 'Se ha editado correctamente el registro.');
+        return 'work';
     }
     public function EliminarStock(Request $request)
     {
